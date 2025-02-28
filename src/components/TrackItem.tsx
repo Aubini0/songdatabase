@@ -9,6 +9,7 @@ export interface Track {
   album?: string;
   coverArt: string;
   albumType?: string;
+  duration?: string;
 }
 
 interface TrackItemProps {
@@ -32,7 +33,7 @@ const TrackItem = ({ track, onAdd, isInPlaylist = false }: TrackItemProps) => {
           <img
             src={track.coverArt}
             alt={`${track.title} by ${track.artist}`}
-            className={`w-full h-full object-cover ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
+            className={`w-full h-full object-cover rounded-md ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
             onLoad={() => setImageLoaded(true)}
           />
         </div>
@@ -52,6 +53,9 @@ const TrackItem = ({ track, onAdd, isInPlaylist = false }: TrackItemProps) => {
       <div className="flex items-center gap-4">
         {track.album && (
           <p className="text-sm text-white/50 hidden md:block">{track.album}</p>
+        )}
+        {track.duration && (
+          <p className="text-sm text-white/50">{track.duration}</p>
         )}
         <button
           onClick={() => onAdd(track)}

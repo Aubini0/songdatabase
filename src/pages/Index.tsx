@@ -31,7 +31,8 @@ const Index = () => {
       title: file.name.replace(/\.[^/.]+$/, ""),
       artist: "Uploaded by User",
       coverArt: "https://images.unsplash.com/photo-1485833077593-4278bba3f11f?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80",
-      albumType: "U"
+      albumType: "U",
+      duration: "3:30" // Default duration for uploaded tracks
     };
     
     setPlaylistTracks(prev => [newTrack, ...prev]);
@@ -42,13 +43,13 @@ const Index = () => {
       // Remove from playlist if already added
       setPlaylistTracks(prev => prev.filter(t => t.id !== track.id));
       toast({
-        description: `${track.title} removed from your playlist`,
+        description: `${track.title} removed from your song pool`,
       });
     } else {
       // Add to playlist
       setPlaylistTracks(prev => [track, ...prev]);
       toast({
-        description: `${track.title} added to your playlist`,
+        description: `${track.title} added to your song pool`,
       });
     }
   };
