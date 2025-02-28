@@ -82,16 +82,24 @@ const Index = () => {
 
         <SearchBar onSearch={handleSearch} onUpload={handleUpload} />
         
-        <SearchResults 
-          tracks={filteredTracks} 
-          onAddToPlaylist={handleAddToPlaylist}
-          playlistTracks={playlistTracks}
-        />
-        
-        <Playlist 
-          tracks={playlistTracks} 
-          onAddToPlaylist={handleAddToPlaylist} 
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-xl font-medium mb-4">Search Results</h2>
+            <SearchResults 
+              tracks={filteredTracks} 
+              onAddToPlaylist={handleAddToPlaylist}
+              playlistTracks={playlistTracks}
+            />
+          </div>
+          
+          <div>
+            <h2 className="text-xl font-medium mb-4">Your Song Pool</h2>
+            <Playlist 
+              tracks={playlistTracks} 
+              onAddToPlaylist={handleAddToPlaylist} 
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

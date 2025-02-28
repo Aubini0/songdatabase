@@ -22,9 +22,6 @@ const SearchResults = ({ tracks, onAddToPlaylist, playlistTracks }: SearchResult
 
   return (
     <div className="glass-morphism rounded-xl overflow-hidden animate-fade-in">
-      <div className="px-4 py-3 bg-white/5 border-b border-white/10">
-        <h2 className="text-lg font-medium">Search Results</h2>
-      </div>
       <div className="max-h-[400px] overflow-y-auto scrollbar-none">
         {tracks.map(track => (
           <TrackItem 
