@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Music } from "lucide-react";
+import { Music, Plus, Check, X } from "lucide-react";
 
 export interface Track {
   id: string;
@@ -20,6 +20,7 @@ interface TrackItemProps {
 
 const TrackItem = ({ track, onAdd, isInPlaylist = false }: TrackItemProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   return (
     <div className="track-item animate-enter">
@@ -59,9 +60,15 @@ const TrackItem = ({ track, onAdd, isInPlaylist = false }: TrackItemProps) => {
         )}
         <button
           onClick={() => onAdd(track)}
-          className="add-btn"
+          className="p-2 rounded-full hover:bg-white/10 transition-all"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
-          {isInPlaylist ? "Added" : "Add"}
+          {isInPlaylist ? (
+            isHovering ? <X size={20} className="text-red-500" /> : <Check size={20} className="text-green-500" />
+          ) : (
+            <Plus size={20} className="text-white" />
+          )}
         </button>
       </div>
     </div>
