@@ -63,24 +63,16 @@
 }
 
 .track-item {
-  @apply border-b border-white/10 px-4 py-4 flex items-center justify-between gap-4 transition-all duration-200;
+  @apply border-b border-white/10 px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4 transition-all duration-200;
 }
 
 .track-item:hover {
   @apply bg-white/5;
 }
 
-.track-item img {
-  @apply rounded-md shadow-md transition-transform duration-300;
-}
-
-.track-item:hover img {
-  @apply scale-105;
-}
-
 .add-btn {
-  @apply rounded-full px-6 py-1.5 border border-white/20 text-white
-  transition-all duration-300 bg-transparent hover:bg-white/10 hover:border-white/30;
+  @apply rounded-full px-3 sm:px-6 py-1 sm:py-1.5 border border-white/20 text-white
+  text-sm transition-all duration-300 bg-transparent hover:bg-white/10 hover:border-white/30;
 }
 
 .fade-in {

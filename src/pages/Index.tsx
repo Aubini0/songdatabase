@@ -63,14 +63,13 @@ const Index = () => {
     
     return allTracks.filter(track => 
       track.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      track.artist.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (track.album && track.album.toLowerCase().includes(searchQuery.toLowerCase()))
+      track.artist.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, allTracks]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white">
-      <div className="max-w-5xl mx-auto px-4 py-12">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
         <SearchBar 
           onSearch={handleSearch} 
           onOpenUploadModal={() => setIsUploadModalOpen(true)}
