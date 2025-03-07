@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Plus, Check, X, Play, Pause } from "lucide-react";
+import { Check, X, Play, Pause } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
 export interface Track {
@@ -50,17 +50,6 @@ const TrackItem = ({
       <div className="flex items-center gap-2 sm:gap-4">
         {track.duration && (
           <p className="text-xs sm:text-sm text-white/50">{track.duration}</p>
-        )}
-        {!isInPlaylist && (
-          <button
-            onClick={() => onAdd(track)}
-            className="p-1.5 sm:p-2 rounded-full hover:bg-white/10 transition-all"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
-            aria-label="Add to playlist"
-          >
-            <Plus size={18} className="text-white" />
-          </button>
         )}
         {isInPlaylist && (
           <button

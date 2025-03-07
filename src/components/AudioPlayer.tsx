@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Track } from "./TrackItem";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AudioPlayerProps {
   currentTrack: Track | null;
@@ -23,6 +24,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   const [isMuted, setIsMuted] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isMobile = useIsMobile();
   
   // In a real app, this would be the actual audio file
   const audioSrc = "https://example.com/sample-audio.mp3";
@@ -109,7 +111,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   if (!currentTrack) return null;
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#121212] border-t border-white/10 px-4 py-3 z-50 text-white animate-slide-in-up">
+    <div className="fixed bottom-0 left-0 right-0 bg-[#121212] border-t border-white/10 px-3 py-2 sm:px-4 sm:py-3 z-50 text-white animate-slide-in-up">
       <audio 
         ref={audioRef} 
         src={audioSrc} 
@@ -117,25 +119,25 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
       />
       
       <div className="max-w-5xl mx-auto">
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <div className="flex items-center gap-3 mb-2 sm:mb-0">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 mb-0 sm:mb-0 min-w-[80px] sm:min-w-[120px]">
             <button 
               onClick={handlePlayPause}
-              className="p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors"
+              className="p-1.5 sm:p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
-              {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+              {isPlaying ? <Pause size={isMobile ? 14 : 18} /> : <Play size={isMobile ? 14 : 18} />}
             </button>
             
-            <div className="text-sm">
-              <div className="font-medium">{currentTrack.title}</div>
-              <div className="text-xs text-white/70">{currentTrack.artist}</div>
+            <div className="text-xs sm:text-sm truncate max-w-[60px] sm:max-w-full">
+              <div className="font-medium truncate">{currentTrack.title}</div>
+              <div className="text-[0.65rem] sm:text-xs text-white/70 truncate">{currentTrack.artist}</div>
             </div>
           </div>
           
-          <div className="flex-1 flex flex-col w-full sm:w-auto gap-1">
-            <div className="flex items-center gap-2 w-full">
-              <span className="text-xs text-white/70 w-10 text-right">
+          <div className="flex-1 flex flex-col w-full gap-0 sm:gap-1">
+            <div className="flex items-center gap-1 sm:gap-2 w-full">
+              <span className="text-[0.6rem] sm:text-xs text-white/70 w-6 sm:w-10 text-right">
                 {formatTime(currentTime)}
               </span>
               <Slider
@@ -146,30 +148,32 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
                 onValueChange={handleSeek}
                 className="w-full"
               />
-              <span className="text-xs text-white/70 w-10">
+              <span className="text-[0.6rem] sm:text-xs text-white/70 w-6 sm:w-10">
                 {formatTime(duration)}
               </span>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 mt-2 sm:mt-0">
-            <button
-              onClick={toggleMute}
-              className="p-1 rounded-full hover:bg-white/10 transition-colors"
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
-            
-            <Slider
-              value={[isMuted ? 0 : volume]}
-              min={0}
-              max={1}
-              step={0.01}
-              onValueChange={handleVolumeChange}
-              className="w-20"
-            />
-          </div>
+          {!isMobile && (
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                onClick={toggleMute}
+                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                aria-label={isMuted ? "Unmute" : "Mute"}
+              >
+                {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              </button>
+              
+              <Slider
+                value={[isMuted ? 0 : volume]}
+                min={0}
+                max={1}
+                step={0.01}
+                onValueChange={handleVolumeChange}
+                className="w-20"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

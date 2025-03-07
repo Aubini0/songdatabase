@@ -23,7 +23,7 @@ const SearchResults = ({
 }: SearchResultsProps) => {
   if (tracks.length === 0) {
     return (
-      <div className="glass-morphism rounded-xl p-4 sm:p-8 text-center">
+      <div className="glass-morphism rounded-xl p-3 sm:p-8 text-center">
         <p className="text-white/70 text-sm sm:text-base">No tracks found. Try searching for something else.</p>
       </div>
     );
@@ -39,7 +39,7 @@ const SearchResults = ({
 
   return (
     <div className="glass-morphism rounded-xl overflow-hidden animate-fade-in">
-      <div className="max-h-[350px] sm:max-h-[400px] overflow-y-auto scrollbar-none">
+      <div className="max-h-[300px] sm:max-h-[400px] overflow-y-auto scrollbar-none">
         {tracks.map(track => (
           <TrackItem 
             key={track.id} 
