@@ -1,17 +1,22 @@
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
 import { Track } from "@/components/TrackItem";
 import sampleTracks from "@/data/sampleTracks";
 import { toast } from "@/components/ui/use-toast";
 import UploadSongModal from "@/components/UploadSongModal";
+import AudioPlayer from "@/components/AudioPlayer";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [allTracks, setAllTracks] = useState<Track[]>(sampleTracks);
+  
+  // Audio player state
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
+  const [isPaused, setIsPaused] = useState(true);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -58,6 +63,20 @@ const Index = () => {
     setPlaylistTracks(prev => [track, ...prev]);
   };
   
+  const handlePlayTrack = (track: Track) => {
+    setCurrentTrack(track);
+    setIsPaused(false);
+  };
+  
+  const handlePauseTrack = () => {
+    setIsPaused(true);
+  };
+  
+  const handleClosePlayer = () => {
+    setCurrentTrack(null);
+    setIsPaused(true);
+  };
+  
   const filteredTracks = useMemo(() => {
     if (!searchQuery.trim()) return allTracks;
     
@@ -66,6 +85,20 @@ const Index = () => {
       track.artist.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, allTracks]);
+
+  // Add padding to the bottom of the page when audio player is visible
+  useEffect(() => {
+    const body = document.body;
+    if (currentTrack) {
+      body.style.paddingBottom = "80px"; // Adjust based on player height
+    } else {
+      body.style.paddingBottom = "0";
+    }
+    
+    return () => {
+      body.style.paddingBottom = "0";
+    };
+  }, [currentTrack]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white">
@@ -79,6 +112,10 @@ const Index = () => {
           tracks={filteredTracks} 
           onAddToPlaylist={handleAddToPlaylist}
           playlistTracks={playlistTracks}
+          onPlayTrack={handlePlayTrack}
+          currentlyPlaying={currentTrack}
+          isPaused={isPaused}
+          onPauseTrack={handlePauseTrack}
         />
         
         <UploadSongModal 
@@ -86,6 +123,13 @@ const Index = () => {
           onClose={() => setIsUploadModalOpen(false)}
           onUploadSuccess={handleUploadSuccess}
         />
+        
+        {currentTrack && (
+          <AudioPlayer 
+            currentTrack={currentTrack} 
+            onClose={handleClosePlayer}
+          />
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,9 @@
 
-import React, { useState } from "react";
-import { Music, X, Upload } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Music, X, Upload, Play, Pause } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Track } from "./TrackItem";
+import { Slider } from "@/components/ui/slider";
 
 interface UploadSongModalProps {
   isOpen: boolean;
@@ -10,15 +11,73 @@ interface UploadSongModalProps {
   onUploadSuccess: (track: Track) => void;
 }
 
+const formatTime = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+};
+
 const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalProps) => {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  
+  // Audio preview state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      
+      // Create audio preview URL
+      if (audioPreviewUrl) {
+        URL.revokeObjectURL(audioPreviewUrl);
+      }
+      const previewUrl = URL.createObjectURL(selectedFile);
+      setAudioPreviewUrl(previewUrl);
+      
+      // Reset audio state
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
+  };
+
+  const handleAudioMetadata = () => {
+    if (audioRef.current) {
+      setDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleAudioTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handlePlayPause = () => {
+    if (!audioRef.current || !audioPreviewUrl) return;
+    
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(error => {
+        console.error("Error playing audio:", error);
+      });
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSeek = (value: number[]) => {
+    if (audioRef.current) {
+      const newTime = value[0];
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
     }
   };
 
@@ -34,23 +93,39 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
 
     setIsUploading(true);
     
+    // Pause audio if playing
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+    
     // Simulate upload process
     setTimeout(() => {
-      // Create a new track with mockup data
+      // Extract duration from audio if available
+      let durationString = "3:30"; // Default
+      if (duration) {
+        durationString = formatTime(duration);
+      }
+      
+      // Create a new track with the data
       const newTrack: Track = {
         id: `upload-${Date.now()}`,
         title,
         artist,
-        duration: "3:30", // Default duration
+        duration: durationString,
       };
       
       setIsUploading(false);
       onUploadSuccess(newTrack);
       
-      // Reset form
+      // Reset form and audio state
       setTitle("");
       setArtist("");
       setFile(null);
+      setAudioPreviewUrl(null);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
       
       toast({
         description: `${title} by ${artist} uploaded successfully`,
@@ -129,6 +204,45 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
                 />
               </div>
             </div>
+            
+            {audioPreviewUrl && (
+              <div className="mt-4 rounded-lg bg-black/30 p-3 border border-white/10">
+                <audio 
+                  ref={audioRef} 
+                  src={audioPreviewUrl}
+                  onLoadedMetadata={handleAudioMetadata}
+                  onTimeUpdate={handleAudioTimeUpdate}
+                  onEnded={() => setIsPlaying(false)}
+                  className="hidden"
+                />
+                
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handlePlayPause}
+                      className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                    >
+                      {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                    </button>
+                    <span className="text-xs text-white/80">Preview</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="text-xs text-white/70 w-8">{formatTime(currentTime)}</span>
+                    <Slider
+                      value={[currentTime]}
+                      min={0}
+                      max={duration || 100}
+                      step={1}
+                      onValueChange={handleSeek}
+                      className="flex-1"
+                    />
+                    <span className="text-xs text-white/70 w-8">{formatTime(duration)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           
           <button

@@ -1,13 +1,26 @@
 
+import { useState } from "react";
 import TrackItem, { Track } from "./TrackItem";
 
 interface SearchResultsProps {
   tracks: Track[];
   onAddToPlaylist: (track: Track) => void;
   playlistTracks: Track[];
+  onPlayTrack: (track: Track) => void;
+  currentlyPlaying: Track | null;
+  isPaused: boolean;
+  onPauseTrack: () => void;
 }
 
-const SearchResults = ({ tracks, onAddToPlaylist, playlistTracks }: SearchResultsProps) => {
+const SearchResults = ({ 
+  tracks, 
+  onAddToPlaylist, 
+  playlistTracks, 
+  onPlayTrack,
+  currentlyPlaying,
+  isPaused,
+  onPauseTrack
+}: SearchResultsProps) => {
   if (tracks.length === 0) {
     return (
       <div className="glass-morphism rounded-xl p-4 sm:p-8 text-center">
@@ -20,6 +33,10 @@ const SearchResults = ({ tracks, onAddToPlaylist, playlistTracks }: SearchResult
     return playlistTracks.some(t => t.id === track.id);
   };
 
+  const isTrackPlaying = (track: Track) => {
+    return currentlyPlaying?.id === track.id && !isPaused;
+  };
+
   return (
     <div className="glass-morphism rounded-xl overflow-hidden animate-fade-in">
       <div className="max-h-[350px] sm:max-h-[400px] overflow-y-auto scrollbar-none">
@@ -29,6 +46,9 @@ const SearchResults = ({ tracks, onAddToPlaylist, playlistTracks }: SearchResult
             track={track} 
             onAdd={onAddToPlaylist}
             isInPlaylist={isInPlaylist(track)}
+            isPlaying={isTrackPlaying(track)}
+            onPlay={onPlayTrack}
+            onPause={onPauseTrack}
           />
         ))}
       </div>
