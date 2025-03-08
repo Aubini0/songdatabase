@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -6,7 +5,7 @@ import { Track } from "@/components/TrackItem";
 import sampleTracks from "@/data/sampleTracks";
 import { toast } from "@/components/ui/use-toast";
 import UploadSongModal from "@/components/UploadSongModal";
-import AudioPlayer from "@/components/AudioPlayer";
+import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 

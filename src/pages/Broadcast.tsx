@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { Track } from "@/components/TrackItem";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Sidebar from "@/components/Sidebar";
-import AudioPlayer from "@/components/AudioPlayer";
+import AudioPlayer from "@/components/audio-player";
 
 const Broadcast = () => {
   const isMobile = useIsMobile();
