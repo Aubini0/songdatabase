@@ -1,7 +1,8 @@
+
 import { useState, useMemo, useEffect } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
-import { Track } from "@/components/TrackItem";
+import { Track } from "@/types/music";
 import sampleTracks from "@/data/sampleTracks";
 import { toast } from "@/components/ui/use-toast";
 import UploadSongModal from "@/components/UploadSongModal";

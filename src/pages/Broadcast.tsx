@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { Track } from "@/components/TrackItem";
+import { Track } from "@/types/music";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Sidebar from "@/components/Sidebar";
 import AudioPlayer from "@/components/audio-player";

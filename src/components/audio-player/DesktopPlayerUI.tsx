@@ -1,8 +1,7 @@
-
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { formatTime } from "@/utils/audioUtils";
-import { Track } from "@/components/TrackItem";
+import { Track } from "@/types/music";
 
 interface DesktopPlayerUIProps {
   currentTrack: Track;

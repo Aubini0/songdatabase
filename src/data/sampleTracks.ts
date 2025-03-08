@@ -1,5 +1,4 @@
-
-import { Track } from "../components/TrackItem";
+import { Track } from "@/types/music";
 
 const sampleTracks: Track[] = [
   {

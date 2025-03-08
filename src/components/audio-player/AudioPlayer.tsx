@@ -1,6 +1,6 @@
 
 import { useRef } from "react";
-import { Track } from "../TrackItem";
+import { Track } from "@/types/music";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";

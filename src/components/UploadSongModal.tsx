@@ -1,7 +1,8 @@
+
 import React, { useState, useRef } from "react";
 import { Music, X, Upload, Play, Pause } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import { Track } from "./TrackItem";
+import { Track } from "@/types/music";
 import { Slider } from "@/components/ui/slider";
 
 interface UploadSongModalProps {

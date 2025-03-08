@@ -1,6 +1,6 @@
-
 import { useState } from "react";
-import TrackItem, { Track } from "./TrackItem";
+import TrackItem from "./TrackItem";
+import { Track } from "@/types/music";
 
 interface SearchResultsProps {
   tracks: Track[];
