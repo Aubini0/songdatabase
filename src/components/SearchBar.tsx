@@ -23,8 +23,8 @@ const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
   };
   
   return (
-    <div className="w-full glass-morphism p-5 rounded-xl mb-8 animate-fade-in">
-      <form onSubmit={handleSearch} className="w-full flex gap-2">
+    <div className="w-full flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in">
+      <form onSubmit={handleSearch} className="w-full flex-1">
         <div className="relative flex-grow">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" size={18} />
           <input
@@ -35,15 +35,16 @@ const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
             className="w-full pl-10 pr-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
           />
         </div>
-        <button
-          type="button"
-          onClick={onOpenUploadModal}
-          className="px-4 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-colors flex items-center gap-2"
-        >
-          <Upload size={18} />
-          <span>Upload</span>
-        </button>
       </form>
+      
+      <button
+        type="button"
+        onClick={onOpenUploadModal}
+        className="px-4 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors flex items-center justify-center gap-2 min-w-[120px]"
+      >
+        <Upload size={18} />
+        <span>Upload</span>
+      </button>
     </div>
   );
 };
