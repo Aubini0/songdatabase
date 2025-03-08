@@ -24,8 +24,16 @@ export const MobilePlayerUI = ({
   onClose
 }: MobilePlayerUIProps) => {
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full px-3 py-2">
       <div className="flex items-center gap-2 w-full">
+        {currentTrack.imageUrl && (
+          <img 
+            src={currentTrack.imageUrl} 
+            alt={currentTrack.title} 
+            className="h-8 w-8 object-cover rounded flex-shrink-0"
+          />
+        )}
+        
         <button 
           onClick={handlePlayPause}
           className="p-1.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors flex-shrink-0"

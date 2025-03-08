@@ -30,7 +30,7 @@
     bottom: 60px;
     left: 0;
     right: 0;
-    z-index: 30;
+    z-index: 40;
     background-color: #121212;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
@@ -40,6 +40,7 @@
 .main-content {
   position: relative;
   z-index: 10;
+  padding-bottom: 100px; /* Add padding to account for the fixed footer player */
 }
 
 .search-section {
@@ -52,24 +53,25 @@
 
 /* Audio player specific styles */
 .audio-player {
-  width: 100vw;
-  max-width: 100vw;
-  box-sizing: border-box;
-}
-
-.audio-player-container {
-  width: 100%;
-  max-width: 100%;
-  display: flex;
-  box-sizing: border-box;
-  padding: 0 8px;
-}
-
-/* Fix width issues with fixed positioned elements */
-.fixed.bottom-0.left-0.right-0 {
-  width: 100vw !important;
-  max-width: 100vw !important;
+  width: 100%; 
   box-sizing: border-box;
   left: 0 !important;
   right: 0 !important;
+}
+
+body {
+  padding-bottom: 80px; /* Space for the audio player */
+}
+
+/* Ensure the sidebar doesn't overlap with the player */
+@media (min-width: 640px) {
+  .sidebar-expanded\:ml-\[220px\] {
+    margin-left: 220px;
+  }
+}
+
+/* Make the audio player span the full width for both mobile and desktop */
+.audio-player {
+  width: 100vw !important;
+  max-width: 100vw !important;
 }

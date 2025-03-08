@@ -92,8 +92,9 @@ const Index = () => {
   // Add padding to the bottom of the page when audio player or mobile nav is visible
   useEffect(() => {
     const body = document.body;
+    
     if (currentTrack && isMobile) {
-      body.style.paddingBottom = "160px"; // Space for both player and mobile nav
+      body.style.paddingBottom = "140px"; // Space for both player and mobile nav
     } else if (currentTrack) {
       body.style.paddingBottom = "80px"; // Just for player on desktop
     } else if (isMobile) {
@@ -112,7 +113,7 @@ const Index = () => {
       <Sidebar />
       
       <div className="flex-1 sm:ml-[70px] sidebar-expanded:ml-[220px] transition-all duration-300">
-        <div className="max-w-5xl mx-auto pb-6 sm:pb-12">
+        <div className="max-w-5xl mx-auto pb-6 sm:pb-20">
           <SearchBar 
             onSearch={handleSearch} 
             onOpenUploadModal={() => setIsUploadModalOpen(true)}
