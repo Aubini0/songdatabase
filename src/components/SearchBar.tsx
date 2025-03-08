@@ -47,10 +47,13 @@ const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
       <button
         type="button"
         onClick={onOpenUploadModal}
-        className="px-4 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors flex items-center justify-center gap-2 min-w-[120px] shadow-md"
+        className={cn(
+          "rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors flex items-center justify-center gap-2 shadow-md",
+          isMobile ? "px-3 py-2 min-w-[100px]" : "px-4 py-3 min-w-[120px]"
+        )}
       >
-        <Upload size={18} className="text-white/90" />
-        <span className="font-medium">Upload</span>
+        <Upload size={isMobile ? 16 : 18} className="text-white/90" />
+        <span className={cn("font-medium", isMobile ? "text-sm" : "")}>Upload</span>
       </button>
     </div>
   );

@@ -120,11 +120,6 @@ const Index = () => {
           
           <div className="px-3 sm:px-6">
             <div className="glass-morphism rounded-lg overflow-hidden">
-              <div className="p-3 sm:p-4 border-b border-white/10">
-                <h2 className="text-lg font-semibold text-white/90">Song Library</h2>
-                <p className="text-xs text-white/60 mt-1">Browse and add songs to your broadcast</p>
-              </div>
-              
               <SearchResults 
                 tracks={filteredTracks} 
                 onAddToPlaylist={handleAddToPlaylist}

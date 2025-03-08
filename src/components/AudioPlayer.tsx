@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -26,7 +27,8 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isMobile = useIsMobile();
   
-  const audioSrc = "https://example.com/sample-audio.mp3";
+  // Using a sample audio source that exists
+  const audioSrc = currentTrack?.audioUrl || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
   
   useEffect(() => {
     if (!audioRef.current) return;
@@ -111,10 +113,10 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   
   return (
     <div className={cn(
-      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up shadow-lg z-30",
+      "fixed left-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up shadow-lg z-30",
       isMobile 
-        ? "bottom-[60px] px-2 py-2"
-        : "bottom-0 px-3 py-3 w-full"
+        ? "right-0 bottom-[60px] px-2 py-2"
+        : "bottom-0 px-3 py-3 sidebar-expanded:left-[220px] left-[70px] transition-all duration-300"
     )}>
       <audio 
         ref={audioRef} 
