@@ -1,6 +1,6 @@
 
-import React from "react";
-import { Music, Radio } from "lucide-react";
+import React, { useState } from "react";
+import { Music, Radio, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,6 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Sidebar = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   
   const navItems = [
     {
@@ -21,6 +22,10 @@ const Sidebar = () => {
       path: "/broadcast"
     }
   ];
+
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   if (isMobile) {
     return (
@@ -47,10 +52,23 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="hidden sm:block w-[220px] flex-shrink-0 bg-[#0a0a0a] border-r border-white/10 h-screen fixed">
+    <div 
+      className={cn(
+        "hidden sm:block bg-[#0a0a0a] border-r border-white/10 h-screen fixed transition-all duration-300",
+        isCollapsed ? "w-[70px]" : "w-[220px]"
+      )}
+    >
+      <button 
+        onClick={toggleCollapse}
+        className="absolute -right-3 top-6 bg-[#0a0a0a] p-1 rounded-full border border-white/10 text-white/60 hover:text-white z-50"
+      >
+        {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+      </button>
+      
       <div className="p-4 h-20 flex items-center">
-        <h1 className="text-xl font-bold text-white">Music App</h1>
+        {/* Removed "Music App" text */}
       </div>
+      
       <nav className="p-3">
         {navItems.map((item) => (
           <Link
@@ -64,7 +82,7 @@ const Sidebar = () => {
             )}
           >
             {item.icon}
-            <span>{item.title}</span>
+            {!isCollapsed && <span>{item.title}</span>}
           </Link>
         ))}
       </nav>

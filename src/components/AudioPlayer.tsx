@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -109,14 +110,17 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   if (!currentTrack) return null;
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#121212] border-t border-white/10 px-3 py-2 sm:px-4 sm:py-3 z-50 text-white animate-slide-in-up sm:pl-[220px]">
+    <div className={cn(
+      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 z-50 text-white animate-slide-in-up",
+      isMobile ? "bottom-[50px] px-2 py-2" : "bottom-0 px-3 py-3"
+    )}>
       <audio 
         ref={audioRef} 
         src={audioSrc} 
         preload="metadata"
       />
       
-      <div className="max-w-5xl mx-auto">
+      <div className="mx-auto">
         {isMobile ? (
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
@@ -144,7 +148,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
                 max={duration || 100}
                 step={1}
                 onValueChange={handleSeek}
-                className="flex-1 max-w-[80%] mx-auto"
+                className="flex-1 max-w-[85%] mx-auto"
               />
               <span className="text-[0.6rem] text-white/70 w-6">
                 {formatTime(duration)}
@@ -153,7 +157,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 w-[200px] flex-shrink-0">
+            <div className="flex items-center gap-2 w-[180px] flex-shrink-0">
               <button 
                 onClick={handlePlayPause}
                 className="p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors flex-shrink-0"
@@ -168,7 +172,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
               </div>
             </div>
             
-            <div className="flex items-center gap-2 max-w-[50%] flex-1">
+            <div className="flex items-center gap-2 flex-1 max-w-[calc(100%-320px)]">
               <span className="text-xs text-white/70 w-10 text-right flex-shrink-0">
                 {formatTime(currentTime)}
               </span>
@@ -209,5 +213,8 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
     </div>
   );
 };
+
+// Missing import for cn
+import { cn } from "@/lib/utils";
 
 export default AudioPlayer;

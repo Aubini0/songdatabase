@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Track } from "@/components/TrackItem";
 import { useIsMobile } from "@/hooks/use-mobile";
 import Sidebar from "@/components/Sidebar";
@@ -20,11 +20,29 @@ const Broadcast = () => {
     setCurrentTrack(null);
   };
 
+  // Add padding to the bottom of the page when audio player or mobile nav is visible
+  useEffect(() => {
+    const body = document.body;
+    if (currentTrack && isMobile) {
+      body.style.paddingBottom = "160px"; // Space for both player and mobile nav
+    } else if (currentTrack) {
+      body.style.paddingBottom = "80px"; // Just for player on desktop
+    } else if (isMobile) {
+      body.style.paddingBottom = "60px"; // Just for mobile nav
+    } else {
+      body.style.paddingBottom = "0";
+    }
+    
+    return () => {
+      body.style.paddingBottom = "0";
+    };
+  }, [currentTrack, isMobile]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white flex">
       <Sidebar />
       
-      <div className="flex-1 sm:ml-[220px]">
+      <div className="flex-1 sm:ml-[220px] transition-all duration-300">
         <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
           <h1 className="text-2xl font-bold mb-6">Your Broadcast</h1>
           

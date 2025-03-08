@@ -93,7 +93,7 @@ const Index = () => {
   useEffect(() => {
     const body = document.body;
     if (currentTrack && isMobile) {
-      body.style.paddingBottom = "130px"; // Space for both player and mobile nav
+      body.style.paddingBottom = "160px"; // Space for both player and mobile nav
     } else if (currentTrack) {
       body.style.paddingBottom = "80px"; // Just for player on desktop
     } else if (isMobile) {
@@ -111,7 +111,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white flex">
       <Sidebar />
       
-      <div className="flex-1 sm:ml-[220px]">
+      <div className="flex-1 sm:ml-[220px] transition-all duration-300">
         <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
           <SearchBar 
             onSearch={handleSearch} 
