@@ -27,7 +27,8 @@ const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
   
   return (
     <div className={cn(
-      "w-full flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in sticky top-0 z-10 pt-4 pb-4 bg-gradient-to-b from-[#121212] to-transparent",
+      "w-full flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in sticky top-0 z-30 pt-4 pb-4",
+      "bg-[#121212] border-b border-white/10", // Solid background instead of gradient
       isMobile ? "px-3" : "px-4"
     )}>
       <form onSubmit={handleSearch} className="w-full flex-1">

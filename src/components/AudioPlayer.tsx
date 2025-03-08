@@ -111,8 +111,10 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   
   return (
     <div className={cn(
-      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up",
-      isMobile ? "bottom-[60px] px-2 py-2 z-40" : "bottom-0 px-3 py-3 z-40 sm:left-[70px] sidebar-expanded:left-[220px]"
+      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up shadow-lg z-30",
+      isMobile 
+        ? "bottom-[60px] px-2 py-2"
+        : "bottom-0 px-3 py-3 w-full"
     )}>
       <audio 
         ref={audioRef} 
@@ -156,7 +158,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 max-w-5xl mx-auto">
             <div className="flex items-center gap-2 w-[180px] flex-shrink-0">
               <button 
                 onClick={handlePlayPause}
@@ -172,7 +174,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
               </div>
             </div>
             
-            <div className="flex items-center gap-2 flex-1 max-w-[calc(100%-350px)]">
+            <div className="flex items-center gap-2 flex-1">
               <span className="text-xs text-white/70 w-10 text-right flex-shrink-0">
                 {formatTime(currentTime)}
               </span>

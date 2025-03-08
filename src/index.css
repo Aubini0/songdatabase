@@ -25,9 +25,7 @@
     --ring: 240 4.9% 83.9%;
     --radius: 0.75rem;
   }
-}
 
-@layer base {
   * {
     @apply border-border selection:bg-white/10 selection:text-white;
   }
@@ -133,4 +131,44 @@ body:not(.sidebar-collapsed) .sidebar-expanded\:left-\[220px\] {
   .glass-morphism {
     @apply backdrop-blur-lg;
   }
+}
+
+/* Ensure search bar has proper layering */
+.search-bar-container {
+  position: relative;
+  z-index: 30;
+}
+
+/* Fix mobile UI layering */
+@media (max-width: 640px) {
+  .search-results-container {
+    z-index: 10;
+    position: relative;
+    margin-top: 1rem;
+  }
+  
+  /* Fix mobile audio player positioning */
+  .mobile-player-container {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    z-index: 30;
+    background-color: #121212;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Adjust main content container for proper scrolling and layering */
+.main-content {
+  position: relative;
+  z-index: 10;
+}
+
+.search-section {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background-color: #121212;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
