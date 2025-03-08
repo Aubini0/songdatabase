@@ -1,0 +1,34 @@
+
+/* Improved Search Bar */
+.search-input {
+  @apply w-full pl-10 pr-4 py-3 rounded-lg bg-black/30 border border-white/10 text-white 
+  focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all;
+}
+
+.upload-button {
+  @apply px-4 py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors
+  flex items-center justify-center gap-2 min-w-[120px] shadow-md;
+}
+
+/* Audio Player Improvements */
+.audio-player {
+  @apply fixed left-0 right-0 bg-[#121212] border-t border-white/10 text-white 
+  shadow-lg z-30 animate-slide-in-up;
+}
+
+.play-button {
+  @apply p-2 rounded-full bg-white text-black hover:bg-opacity-90 transition-colors flex-shrink-0;
+}
+
+.time-display {
+  @apply text-xs text-white/70 w-10 text-right flex-shrink-0;
+}
+
+/* Improved player seeker */
+.audio-seeker {
+  @apply w-full h-1.5 bg-white/10 rounded-full overflow-hidden relative;
+}
+
+.audio-seeker-progress {
+  @apply absolute top-0 left-0 h-full bg-white/70 rounded-full;
+}

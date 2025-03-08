@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Check, X, Play, Pause, Music, Plus } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
@@ -8,6 +7,7 @@ export interface Track {
   title: string;
   artist: string;
   duration?: string;
+  audioUrl?: string;
 }
 
 interface TrackItemProps {
