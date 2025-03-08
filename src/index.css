@@ -103,6 +103,19 @@
   animation: slideInUp 0.3s ease-out forwards;
 }
 
+/* Sidebar related styles */
+.nav-link {
+  @apply flex items-center gap-2 px-4 py-2 rounded-md transition-colors;
+}
+
+.nav-link.active {
+  @apply bg-white/10 text-white;
+}
+
+.nav-link:not(.active) {
+  @apply text-white/60 hover:bg-white/5 hover:text-white/80;
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
   .track-item {

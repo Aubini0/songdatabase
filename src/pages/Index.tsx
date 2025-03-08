@@ -7,12 +7,15 @@ import sampleTracks from "@/data/sampleTracks";
 import { toast } from "@/components/ui/use-toast";
 import UploadSongModal from "@/components/UploadSongModal";
 import AudioPlayer from "@/components/AudioPlayer";
+import Sidebar from "@/components/Sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [playlistTracks, setPlaylistTracks] = useState<Track[]>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [allTracks, setAllTracks] = useState<Track[]>(sampleTracks);
+  const isMobile = useIsMobile();
   
   // Audio player state
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
@@ -86,11 +89,15 @@ const Index = () => {
     );
   }, [searchQuery, allTracks]);
 
-  // Add padding to the bottom of the page when audio player is visible
+  // Add padding to the bottom of the page when audio player or mobile nav is visible
   useEffect(() => {
     const body = document.body;
-    if (currentTrack) {
-      body.style.paddingBottom = "80px"; // Adjust based on player height
+    if (currentTrack && isMobile) {
+      body.style.paddingBottom = "130px"; // Space for both player and mobile nav
+    } else if (currentTrack) {
+      body.style.paddingBottom = "80px"; // Just for player on desktop
+    } else if (isMobile) {
+      body.style.paddingBottom = "60px"; // Just for mobile nav
     } else {
       body.style.paddingBottom = "0";
     }
@@ -98,38 +105,42 @@ const Index = () => {
     return () => {
       body.style.paddingBottom = "0";
     };
-  }, [currentTrack]);
+  }, [currentTrack, isMobile]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white">
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
-        <SearchBar 
-          onSearch={handleSearch} 
-          onOpenUploadModal={() => setIsUploadModalOpen(true)}
-        />
-        
-        <SearchResults 
-          tracks={filteredTracks} 
-          onAddToPlaylist={handleAddToPlaylist}
-          playlistTracks={playlistTracks}
-          onPlayTrack={handlePlayTrack}
-          currentlyPlaying={currentTrack}
-          isPaused={isPaused}
-          onPauseTrack={handlePauseTrack}
-        />
-        
-        <UploadSongModal 
-          isOpen={isUploadModalOpen}
-          onClose={() => setIsUploadModalOpen(false)}
-          onUploadSuccess={handleUploadSuccess}
-        />
-        
-        {currentTrack && (
-          <AudioPlayer 
-            currentTrack={currentTrack} 
-            onClose={handleClosePlayer}
+    <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white flex">
+      <Sidebar />
+      
+      <div className="flex-1 sm:ml-[220px]">
+        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
+          <SearchBar 
+            onSearch={handleSearch} 
+            onOpenUploadModal={() => setIsUploadModalOpen(true)}
           />
-        )}
+          
+          <SearchResults 
+            tracks={filteredTracks} 
+            onAddToPlaylist={handleAddToPlaylist}
+            playlistTracks={playlistTracks}
+            onPlayTrack={handlePlayTrack}
+            currentlyPlaying={currentTrack}
+            isPaused={isPaused}
+            onPauseTrack={handlePauseTrack}
+          />
+          
+          <UploadSongModal 
+            isOpen={isUploadModalOpen}
+            onClose={() => setIsUploadModalOpen(false)}
+            onUploadSuccess={handleUploadSuccess}
+          />
+          
+          {currentTrack && (
+            <AudioPlayer 
+              currentTrack={currentTrack} 
+              onClose={handleClosePlayer}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
