@@ -1,5 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 interface UseAudioPlayerProps {
   audioSrc: string;
@@ -11,8 +12,18 @@ export const useAudioPlayer = ({ audioSrc }: UseAudioPlayerProps) => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.7);
   const [isMuted, setIsMuted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Reset state when audio source changes
+  useEffect(() => {
+    if (isPlaying) {
+      setIsPlaying(false);
+    }
+    setCurrentTime(0);
+    setIsLoading(true);
+  }, [audioSrc]);
   
   useEffect(() => {
     if (!audioRef.current) return;
@@ -26,6 +37,7 @@ export const useAudioPlayer = ({ audioSrc }: UseAudioPlayerProps) => {
     const handleLoadedMetadata = () => {
       if (audioRef.current) {
         setDuration(audioRef.current.duration);
+        setIsLoading(false);
       }
     };
     
@@ -37,15 +49,28 @@ export const useAudioPlayer = ({ audioSrc }: UseAudioPlayerProps) => {
       }
     };
     
+    const handleError = (e: ErrorEvent) => {
+      console.error("Audio error:", e);
+      setIsPlaying(false);
+      setIsLoading(false);
+      toast({
+        title: "Playback Error",
+        description: "Could not play the selected track. Please try another.",
+        variant: "destructive"
+      });
+    };
+    
     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
     audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
     audioRef.current.addEventListener('ended', handleEnded);
+    audioRef.current.addEventListener('error', handleError as EventListener);
     
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
         audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
         audioRef.current.removeEventListener('ended', handleEnded);
+        audioRef.current.removeEventListener('error', handleError as EventListener);
       }
     };
   }, [audioRef]);
@@ -54,10 +79,13 @@ export const useAudioPlayer = ({ audioSrc }: UseAudioPlayerProps) => {
     if (!audioRef.current) return;
     
     if (isPlaying) {
-      audioRef.current.play().catch(error => {
-        console.error("Error playing audio:", error);
-        setIsPlaying(false);
-      });
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error("Error playing audio:", error);
+          setIsPlaying(false);
+        });
+      }
     } else {
       audioRef.current.pause();
     }
@@ -100,6 +128,7 @@ export const useAudioPlayer = ({ audioSrc }: UseAudioPlayerProps) => {
     duration,
     volume,
     isMuted,
+    isLoading,
     handlePlayPause,
     handleSeek,
     handleVolumeChange,

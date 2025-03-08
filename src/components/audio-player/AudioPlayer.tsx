@@ -15,7 +15,7 @@ interface AudioPlayerProps {
 const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   const isMobile = useIsMobile();
   
-  // Using a sample audio source that exists
+  // Use the track's audioUrl if available, otherwise use a sample
   const audioSrc = currentTrack?.audioUrl || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
   
   const {
@@ -55,6 +55,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
             duration={duration}
             handlePlayPause={handlePlayPause}
             handleSeek={handleSeek}
+            onClose={onClose}
           />
         ) : (
           <DesktopPlayerUI
@@ -68,6 +69,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
             handleSeek={handleSeek}
             handleVolumeChange={handleVolumeChange}
             toggleMute={toggleMute}
+            onClose={onClose}
           />
         )}
       </div>

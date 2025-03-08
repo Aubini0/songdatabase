@@ -1,4 +1,5 @@
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+
+import { Play, Pause, Volume2, VolumeX, X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { formatTime } from "@/utils/audioUtils";
 import { Track } from "@/types/music";
@@ -14,6 +15,7 @@ interface DesktopPlayerUIProps {
   handleSeek: (value: number[]) => void;
   handleVolumeChange: (value: number[]) => void;
   toggleMute: () => void;
+  onClose?: () => void;
 }
 
 export const DesktopPlayerUI = ({
@@ -26,7 +28,8 @@ export const DesktopPlayerUI = ({
   handlePlayPause,
   handleSeek,
   handleVolumeChange,
-  toggleMute
+  toggleMute,
+  onClose
 }: DesktopPlayerUIProps) => {
   return (
     <div className="flex items-center gap-3 max-w-5xl mx-auto">
@@ -62,23 +65,35 @@ export const DesktopPlayerUI = ({
         </span>
       </div>
       
-      <div className="flex items-center gap-2 w-[120px] flex-shrink-0 ml-auto">
-        <button
-          onClick={toggleMute}
-          className="p-1 rounded-full hover:bg-white/10 transition-colors flex-shrink-0"
-          aria-label={isMuted ? "Unmute" : "Mute"}
-        >
-          {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-        </button>
+      <div className="flex items-center gap-3 w-[140px] flex-shrink-0 ml-auto">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleMute}
+            className="p-1 rounded-full hover:bg-white/10 transition-colors flex-shrink-0"
+            aria-label={isMuted ? "Unmute" : "Mute"}
+          >
+            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          </button>
+          
+          <Slider
+            value={[isMuted ? 0 : volume]}
+            min={0}
+            max={1}
+            step={0.01}
+            onValueChange={handleVolumeChange}
+            className="w-20"
+          />
+        </div>
         
-        <Slider
-          value={[isMuted ? 0 : volume]}
-          min={0}
-          max={1}
-          step={0.01}
-          onValueChange={handleVolumeChange}
-          className="w-20"
-        />
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
+            aria-label="Close player"
+          >
+            <X size={18} />
+          </button>
+        )}
       </div>
     </div>
   );

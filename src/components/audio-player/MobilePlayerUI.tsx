@@ -1,4 +1,5 @@
-import { Play, Pause } from "lucide-react";
+
+import { Play, Pause, X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { formatTime } from "@/utils/audioUtils";
 import { Track } from "@/types/music";
@@ -10,6 +11,7 @@ interface MobilePlayerUIProps {
   duration: number;
   handlePlayPause: () => void;
   handleSeek: (value: number[]) => void;
+  onClose?: () => void;
 }
 
 export const MobilePlayerUI = ({
@@ -18,7 +20,8 @@ export const MobilePlayerUI = ({
   currentTime,
   duration,
   handlePlayPause,
-  handleSeek
+  handleSeek,
+  onClose
 }: MobilePlayerUIProps) => {
   return (
     <div className="flex flex-col gap-2">
@@ -35,6 +38,16 @@ export const MobilePlayerUI = ({
           <div className="font-medium truncate">{currentTrack.title}</div>
           <div className="text-[0.65rem] text-white/70 truncate">{currentTrack.artist}</div>
         </div>
+        
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
+            aria-label="Close"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
       
       <div className="flex items-center gap-1 w-full">
