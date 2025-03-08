@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useEffect } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -111,22 +112,29 @@ const Index = () => {
       <Sidebar />
       
       <div className="flex-1 sm:ml-[70px] sidebar-expanded:ml-[220px] transition-all duration-300">
-        <div className="max-w-5xl mx-auto py-6 sm:py-12">
+        <div className="max-w-5xl mx-auto pb-6 sm:pb-12">
           <SearchBar 
             onSearch={handleSearch} 
             onOpenUploadModal={() => setIsUploadModalOpen(true)}
           />
           
-          <div className="px-3 sm:px-4">
-            <SearchResults 
-              tracks={filteredTracks} 
-              onAddToPlaylist={handleAddToPlaylist}
-              playlistTracks={playlistTracks}
-              onPlayTrack={handlePlayTrack}
-              currentlyPlaying={currentTrack}
-              isPaused={isPaused}
-              onPauseTrack={handlePauseTrack}
-            />
+          <div className="px-3 sm:px-6">
+            <div className="glass-morphism rounded-lg overflow-hidden">
+              <div className="p-3 sm:p-4 border-b border-white/10">
+                <h2 className="text-lg font-semibold text-white/90">Song Library</h2>
+                <p className="text-xs text-white/60 mt-1">Browse and add songs to your broadcast</p>
+              </div>
+              
+              <SearchResults 
+                tracks={filteredTracks} 
+                onAddToPlaylist={handleAddToPlaylist}
+                playlistTracks={playlistTracks}
+                onPlayTrack={handlePlayTrack}
+                currentlyPlaying={currentTrack}
+                isPaused={isPaused}
+                onPauseTrack={handlePauseTrack}
+              />
+            </div>
           </div>
           
           <UploadSongModal 

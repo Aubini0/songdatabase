@@ -23,8 +23,10 @@ const SearchResults = ({
 }: SearchResultsProps) => {
   if (tracks.length === 0) {
     return (
-      <div className="p-3 sm:p-8 text-center">
-        <p className="text-white/70 text-sm sm:text-base">No tracks found. Try searching for something else.</p>
+      <div className="p-8 text-center">
+        <div className="p-6 rounded-lg bg-white/5 border border-white/10">
+          <p className="text-white/70 text-sm sm:text-base">No tracks found. Try searching for something else.</p>
+        </div>
       </div>
     );
   }
@@ -39,7 +41,7 @@ const SearchResults = ({
 
   return (
     <div className="overflow-hidden animate-fade-in">
-      <div className="max-h-[300px] sm:max-h-[400px] overflow-y-auto scrollbar-none border-t border-white/10">
+      <div className="max-h-[350px] sm:max-h-[450px] overflow-y-auto scrollbar-none">
         {tracks.map(track => (
           <TrackItem 
             key={track.id} 
