@@ -54,8 +54,21 @@
 .audio-player {
   width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
 }
 
 .audio-player-container {
   width: 100%;
+  max-width: 100%;
+  display: flex;
+  box-sizing: border-box;
+}
+
+/* Ensure player controls remain fully visible */
+.fixed.inset-x-0 {
+  left: 0;
+  right: 0;
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
 }

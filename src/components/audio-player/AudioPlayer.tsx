@@ -34,19 +34,19 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   if (!currentTrack) return null;
   
   return (
-    <div className={cn(
-      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up shadow-lg z-30",
-      isMobile 
-        ? "bottom-[60px] px-2 py-2"
-        : "bottom-0 px-4 py-4 w-full"
-    )}>
+    <div className="fixed inset-x-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up shadow-lg z-30"
+      style={{ 
+        bottom: isMobile ? "60px" : "0",
+        padding: isMobile ? "8px 12px" : "12px 16px" 
+      }}
+    >
       <audio 
         ref={audioRef} 
         src={audioSrc} 
         preload="metadata"
       />
       
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-7xl mx-auto audio-player-container">
         {isMobile ? (
           <MobilePlayerUI
             currentTrack={currentTrack}

@@ -32,8 +32,8 @@ export const DesktopPlayerUI = ({
   onClose
 }: DesktopPlayerUIProps) => {
   return (
-    <div className="flex items-center gap-4 w-full">
-      <div className="flex items-center gap-4 min-w-[200px] w-[25%]">
+    <div className="flex items-center justify-between w-full gap-2">
+      <div className="flex items-center gap-4 min-w-[180px] max-w-[25%]">
         <button 
           onClick={handlePlayPause}
           className="p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors flex-shrink-0"
@@ -48,7 +48,7 @@ export const DesktopPlayerUI = ({
         </div>
       </div>
       
-      <div className="flex items-center gap-2 flex-1 mx-4">
+      <div className="flex items-center gap-2 flex-1 mx-2">
         <span className="text-xs text-white/70 w-10 text-right flex-shrink-0">
           {formatTime(currentTime)}
         </span>
@@ -65,7 +65,7 @@ export const DesktopPlayerUI = ({
         </span>
       </div>
       
-      <div className="flex items-center gap-4 min-w-[150px]">
+      <div className="flex items-center gap-3 min-w-[120px] max-w-[180px]">
         <div className="flex items-center gap-2">
           <button
             onClick={toggleMute}
@@ -81,7 +81,7 @@ export const DesktopPlayerUI = ({
             max={1}
             step={0.01}
             onValueChange={handleVolumeChange}
-            className="w-24"
+            className="w-20"
           />
         </div>
         
