@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Music, Radio, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -27,9 +27,23 @@ const Sidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
+  // Handle sidebar state in localStorage
+  useEffect(() => {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState !== null) {
+      setIsCollapsed(savedState === 'true');
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('sidebarCollapsed', isCollapsed.toString());
+    // Add or remove a class on the body to help with responsive layout
+    document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+  }, [isCollapsed]);
+
   if (isMobile) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-[#121212] border-t border-white/10 z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#121212] border-t border-white/10 z-30">
         <nav className="flex justify-around py-3">
           {navItems.map((item) => (
             <Link 
@@ -54,7 +68,7 @@ const Sidebar = () => {
   return (
     <div 
       className={cn(
-        "hidden sm:block bg-[#0a0a0a] border-r border-white/10 h-screen fixed transition-all duration-300",
+        "hidden sm:block bg-[#0a0a0a] border-r border-white/10 h-screen fixed transition-all duration-300 z-40",
         isCollapsed ? "w-[70px]" : "w-[220px]"
       )}
     >
@@ -66,7 +80,7 @@ const Sidebar = () => {
       </button>
       
       <div className="p-4 h-20 flex items-center">
-        {/* Removed "Music App" text */}
+        {/* Sidebar header area */}
       </div>
       
       <nav className="p-3">
@@ -78,7 +92,8 @@ const Sidebar = () => {
               "flex items-center gap-2.5 px-3 py-2.5 rounded-md transition-all mb-1",
               location.pathname === item.path 
                 ? "bg-white/10 text-white" 
-                : "text-white/60 hover:bg-white/5 hover:text-white/80"
+                : "text-white/60 hover:bg-white/5 hover:text-white/80",
+              isCollapsed && "justify-center"
             )}
           >
             {item.icon}

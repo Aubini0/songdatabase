@@ -2,6 +2,8 @@
 import { Search, Upload } from "lucide-react";
 import { useState } from "react";
 import { toast } from "../components/ui/use-toast";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -10,6 +12,7 @@ interface SearchBarProps {
 
 const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
   const [query, setQuery] = useState("");
+  const isMobile = useIsMobile();
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +26,10 @@ const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
   };
   
   return (
-    <div className="w-full flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in">
+    <div className={cn(
+      "w-full flex flex-col sm:flex-row gap-4 mb-8 animate-fade-in sticky top-0 z-10 pt-4 pb-4 bg-gradient-to-b from-[#121212] to-transparent",
+      isMobile ? "px-3" : "px-4"
+    )}>
       <form onSubmit={handleSearch} className="w-full flex-1">
         <div className="relative flex-grow">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" size={18} />

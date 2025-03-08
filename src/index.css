@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -114,6 +113,15 @@
 
 .nav-link:not(.active) {
   @apply text-white/60 hover:bg-white/5 hover:text-white/80;
+}
+
+/* Add sidebar expanded/collapsed utilities */
+body:not(.sidebar-collapsed) .sidebar-expanded\:ml-\[220px\] {
+  margin-left: 220px;
+}
+
+body:not(.sidebar-collapsed) .sidebar-expanded\:left-\[220px\] {
+  left: 220px;
 }
 
 /* Mobile optimizations */

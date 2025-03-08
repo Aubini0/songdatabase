@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -111,22 +110,24 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white flex">
       <Sidebar />
       
-      <div className="flex-1 sm:ml-[220px] transition-all duration-300">
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
+      <div className="flex-1 sm:ml-[70px] sidebar-expanded:ml-[220px] transition-all duration-300">
+        <div className="max-w-5xl mx-auto py-6 sm:py-12">
           <SearchBar 
             onSearch={handleSearch} 
             onOpenUploadModal={() => setIsUploadModalOpen(true)}
           />
           
-          <SearchResults 
-            tracks={filteredTracks} 
-            onAddToPlaylist={handleAddToPlaylist}
-            playlistTracks={playlistTracks}
-            onPlayTrack={handlePlayTrack}
-            currentlyPlaying={currentTrack}
-            isPaused={isPaused}
-            onPauseTrack={handlePauseTrack}
-          />
+          <div className="px-3 sm:px-4">
+            <SearchResults 
+              tracks={filteredTracks} 
+              onAddToPlaylist={handleAddToPlaylist}
+              playlistTracks={playlistTracks}
+              onPlayTrack={handlePlayTrack}
+              currentlyPlaying={currentTrack}
+              isPaused={isPaused}
+              onPauseTrack={handlePauseTrack}
+            />
+          </div>
           
           <UploadSongModal 
             isOpen={isUploadModalOpen}

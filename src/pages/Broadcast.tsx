@@ -42,20 +42,22 @@ const Broadcast = () => {
     <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#0a0a0a] text-white flex">
       <Sidebar />
       
-      <div className="flex-1 sm:ml-[220px] transition-all duration-300">
-        <div className="max-w-5xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
-          <h1 className="text-2xl font-bold mb-6">Your Broadcast</h1>
-          
-          {broadcastTracks.length > 0 ? (
-            <div className="border-t border-white/10">
-              {/* Broadcast tracks list would go here */}
-              <p className="p-4 text-white/70">Your broadcast tracks will appear here.</p>
-            </div>
-          ) : (
-            <div className="p-8 text-center border border-white/10 rounded-lg bg-white/5">
-              <p className="text-white/70">Your broadcast is empty. Add songs from the Song Pool.</p>
-            </div>
-          )}
+      <div className="flex-1 sm:ml-[70px] sidebar-expanded:ml-[220px] transition-all duration-300">
+        <div className="max-w-5xl mx-auto py-6 sm:py-12">
+          <div className="px-3 sm:px-4">
+            <h1 className="text-2xl font-bold mb-6">Your Broadcast</h1>
+            
+            {broadcastTracks.length > 0 ? (
+              <div className="border-t border-white/10">
+                {/* Broadcast tracks list would go here */}
+                <p className="p-4 text-white/70">Your broadcast tracks will appear here.</p>
+              </div>
+            ) : (
+              <div className="p-8 text-center border border-white/10 rounded-lg bg-white/5">
+                <p className="text-white/70">Your broadcast is empty. Add songs from the Song Pool.</p>
+              </div>
+            )}
+          </div>
           
           {currentTrack && (
             <AudioPlayer 

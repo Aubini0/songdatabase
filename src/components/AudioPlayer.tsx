@@ -1,9 +1,9 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Track } from "./TrackItem";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 interface AudioPlayerProps {
   currentTrack: Track | null;
@@ -111,8 +111,8 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   
   return (
     <div className={cn(
-      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 z-50 text-white animate-slide-in-up",
-      isMobile ? "bottom-[50px] px-2 py-2" : "bottom-0 px-3 py-3"
+      "fixed left-0 right-0 bg-[#121212] border-t border-white/10 text-white animate-slide-in-up",
+      isMobile ? "bottom-[60px] px-2 py-2 z-40" : "bottom-0 px-3 py-3 z-40 sm:left-[70px] sidebar-expanded:left-[220px]"
     )}>
       <audio 
         ref={audioRef} 
@@ -172,7 +172,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
               </div>
             </div>
             
-            <div className="flex items-center gap-2 flex-1 max-w-[calc(100%-320px)]">
+            <div className="flex items-center gap-2 flex-1 max-w-[calc(100%-350px)]">
               <span className="text-xs text-white/70 w-10 text-right flex-shrink-0">
                 {formatTime(currentTime)}
               </span>
@@ -213,8 +213,5 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
     </div>
   );
 };
-
-// Missing import for cn
-import { cn } from "@/lib/utils";
 
 export default AudioPlayer;
