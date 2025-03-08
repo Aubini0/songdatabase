@@ -119,25 +119,26 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
       />
       
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-2 mb-0 sm:mb-0 min-w-[80px] sm:min-w-[120px]">
-            <button 
-              onClick={handlePlayPause}
-              className="p-1.5 sm:p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors"
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? <Pause size={isMobile ? 14 : 18} /> : <Play size={isMobile ? 14 : 18} />}
-            </button>
-            
-            <div className="text-xs sm:text-sm truncate max-w-[60px] sm:max-w-full">
-              <div className="font-medium truncate">{currentTrack.title}</div>
-              <div className="text-[0.65rem] sm:text-xs text-white/70 truncate">{currentTrack.artist}</div>
+        {isMobile ? (
+          // Mobile layout - vertical arrangement
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handlePlayPause}
+                className="p-1.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors"
+                aria-label={isPlaying ? "Pause" : "Play"}
+              >
+                {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+              </button>
+              
+              <div className="text-xs truncate flex-1">
+                <div className="font-medium truncate">{currentTrack.title}</div>
+                <div className="text-[0.65rem] text-white/70 truncate">{currentTrack.artist}</div>
+              </div>
             </div>
-          </div>
-          
-          <div className="flex-1 flex flex-col w-full gap-0 sm:gap-1">
-            <div className="flex items-center gap-1 sm:gap-2 w-full">
-              <span className="text-[0.6rem] sm:text-xs text-white/70 w-6 sm:w-10 text-right">
+            
+            <div className="flex items-center gap-1 w-full">
+              <span className="text-[0.6rem] text-white/70 w-6 text-right">
                 {formatTime(currentTime)}
               </span>
               <Slider
@@ -148,17 +149,50 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
                 onValueChange={handleSeek}
                 className="w-full"
               />
-              <span className="text-[0.6rem] sm:text-xs text-white/70 w-6 sm:w-10">
+              <span className="text-[0.6rem] text-white/70 w-6">
                 {formatTime(duration)}
               </span>
             </div>
           </div>
-          
-          {!isMobile && (
-            <div className="hidden sm:flex items-center gap-2">
+        ) : (
+          // Desktop layout - horizontal arrangement with fixed widths
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 w-[180px] flex-shrink-0">
+              <button 
+                onClick={handlePlayPause}
+                className="p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors flex-shrink-0"
+                aria-label={isPlaying ? "Pause" : "Play"}
+              >
+                {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+              </button>
+              
+              <div className="truncate">
+                <div className="font-medium truncate text-sm">{currentTrack.title}</div>
+                <div className="text-xs text-white/70 truncate">{currentTrack.artist}</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 flex-1">
+              <span className="text-xs text-white/70 w-10 text-right flex-shrink-0">
+                {formatTime(currentTime)}
+              </span>
+              <Slider
+                value={[currentTime]}
+                min={0}
+                max={duration || 100}
+                step={1}
+                onValueChange={handleSeek}
+                className="w-full"
+              />
+              <span className="text-xs text-white/70 w-10 flex-shrink-0">
+                {formatTime(duration)}
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-2 w-[100px] flex-shrink-0">
               <button
                 onClick={toggleMute}
-                className="p-1 rounded-full hover:bg-white/10 transition-colors"
+                className="p-1 rounded-full hover:bg-white/10 transition-colors flex-shrink-0"
                 aria-label={isMuted ? "Unmute" : "Mute"}
               >
                 {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
@@ -173,8 +207,8 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
                 className="w-20"
               />
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
