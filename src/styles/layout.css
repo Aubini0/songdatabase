@@ -86,6 +86,17 @@ body {
   transform: translateY(-2px);
 }
 
+/* Crates horizontal scroll container */
+.crates-scroll-container {
+  width: 100%;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.crates-scroll-container .scrollbar {
+  height: 4px;
+}
+
 /* File upload drag and drop */
 .file-drop-zone {
   transition: all 0.2s ease;

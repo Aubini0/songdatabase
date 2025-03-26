@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useEffect, useRef } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -9,6 +10,12 @@ import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Plus, X, FolderClosed, Edit2 } from "lucide-react";
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem 
+} from "@/components/ui/carousel";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -217,50 +224,54 @@ const Index = () => {
                 </button>
               </div>
               
-              <div className="flex flex-wrap gap-2 sm:gap-4">
-                {crates.map(crate => (
-                  <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-1rem)] md:w-[calc(25%-1rem)]">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center flex-1">
-                        <FolderClosed size={16} className="text-white/60 mr-2 shrink-0" />
-                        
-                        {editingCrateId === crate.id ? (
-                          <input
-                            ref={editCrateInputRef}
-                            type="text"
-                            defaultValue={crate.name}
-                            className="editable-crate-name-input bg-white/10"
-                            onBlur={(e) => handleRenameCrate(crate.id, e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                handleRenameCrate(crate.id, e.currentTarget.value);
-                              } else if (e.key === 'Escape') {
-                                setEditingCrateId(null);
-                              }
-                            }}
-                          />
-                        ) : (
-                          <span 
-                            className="text-sm font-medium text-white editable-crate-name truncate"
-                            onClick={() => setEditingCrateId(crate.id)}
-                          >
-                            {crate.name}
-                          </span>
-                        )}
+              <div className="crates-scroll-container">
+                <ScrollArea className="w-full whitespace-nowrap pb-4">
+                  <div className="flex space-x-4 p-1">
+                    {crates.map(crate => (
+                      <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item min-w-[180px] max-w-[220px]">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center flex-1">
+                            <FolderClosed size={16} className="text-white/60 mr-2 shrink-0" />
+                            
+                            {editingCrateId === crate.id ? (
+                              <input
+                                ref={editCrateInputRef}
+                                type="text"
+                                defaultValue={crate.name}
+                                className="editable-crate-name-input bg-white/10"
+                                onBlur={(e) => handleRenameCrate(crate.id, e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    handleRenameCrate(crate.id, e.currentTarget.value);
+                                  } else if (e.key === 'Escape') {
+                                    setEditingCrateId(null);
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <span 
+                                className="text-sm font-medium text-white editable-crate-name truncate"
+                                onClick={() => setEditingCrateId(crate.id)}
+                              >
+                                {crate.name}
+                              </span>
+                            )}
+                          </div>
+                          
+                          {!editingCrateId && (
+                            <button 
+                              onClick={() => setEditingCrateId(crate.id)}
+                              className="p-1 text-white/50 hover:text-white/80 transition-colors"
+                            >
+                              <Edit2 size={12} />
+                            </button>
+                          )}
+                        </div>
+                        <p className="text-xs text-white/50">{crate.tracks.length} tracks</p>
                       </div>
-                      
-                      {!editingCrateId && (
-                        <button 
-                          onClick={() => setEditingCrateId(crate.id)}
-                          className="p-1 text-white/50 hover:text-white/80 transition-colors"
-                        >
-                          <Edit2 size={12} />
-                        </button>
-                      )}
-                    </div>
-                    <p className="text-xs text-white/50">{crate.tracks.length} tracks</p>
+                    ))}
                   </div>
-                ))}
+                </ScrollArea>
               </div>
             </div>
             
