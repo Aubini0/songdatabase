@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect, useRef } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -9,13 +8,19 @@ import UploadSongModal from "@/components/UploadSongModal";
 import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Plus, X, FolderClosed, Edit2 } from "lucide-react";
+import { Plus, X, FolderClosed, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { 
   Carousel, 
   CarouselContent, 
   CarouselItem 
 } from "@/components/ui/carousel";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -173,6 +178,13 @@ const Index = () => {
     });
   };
   
+  const handleDeleteCrate = (crateId: string) => {
+    setCrates(prev => prev.filter(crate => crate.id !== crateId));
+    toast({
+      description: "Crate deleted successfully",
+    });
+  };
+  
   const filteredTracks = useMemo(() => {
     if (!searchQuery.trim()) return allTracks;
     
@@ -225,7 +237,7 @@ const Index = () => {
               </div>
               
               <div className="crates-scroll-container">
-                <ScrollArea className="w-full whitespace-nowrap pb-4">
+                <ScrollArea className="w-full whitespace-nowrap pb-4" orientation="horizontal">
                   <div className="flex space-x-4 p-1">
                     {crates.map(crate => (
                       <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item min-w-[180px] max-w-[220px]">
@@ -250,8 +262,7 @@ const Index = () => {
                               />
                             ) : (
                               <span 
-                                className="text-sm font-medium text-white editable-crate-name truncate"
-                                onClick={() => setEditingCrateId(crate.id)}
+                                className="text-sm font-medium text-white truncate"
                               >
                                 {crate.name}
                               </span>
@@ -259,12 +270,31 @@ const Index = () => {
                           </div>
                           
                           {!editingCrateId && (
-                            <button 
-                              onClick={() => setEditingCrateId(crate.id)}
-                              className="p-1 text-white/50 hover:text-white/80 transition-colors"
-                            >
-                              <Edit2 size={12} />
-                            </button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button 
+                                  className="p-1 text-white/50 hover:text-white/80 transition-colors"
+                                >
+                                  <MoreVertical size={14} />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="bg-[#1a1a1a] border-white/10 text-white">
+                                <DropdownMenuItem 
+                                  className="flex items-center cursor-pointer text-white/80 hover:text-white focus:text-white" 
+                                  onClick={() => setEditingCrateId(crate.id)}
+                                >
+                                  <Pencil size={14} className="mr-2" />
+                                  <span>Rename</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  className="flex items-center cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300" 
+                                  onClick={() => handleDeleteCrate(crate.id)}
+                                >
+                                  <Trash2 size={14} className="mr-2" />
+                                  <span>Delete</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           )}
                         </div>
                         <p className="text-xs text-white/50">{crate.tracks.length} tracks</p>

@@ -91,10 +91,23 @@ body {
   width: 100%;
   position: relative;
   margin-bottom: 1rem;
+  overflow: hidden;
 }
 
 .crates-scroll-container .scrollbar {
   height: 4px;
+  opacity: 0.6;
+}
+
+/* Improved horizontal scrolling for crates */
+[data-orientation="horizontal"] .scrollbar {
+  height: 6px !important;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-orientation="horizontal"] .thumb {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* File upload drag and drop */
@@ -104,8 +117,41 @@ body {
 }
 
 .file-drop-zone.dragging {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(80, 120, 255, 0.1);
+  border-color: rgba(80, 120, 255, 0.5);
+}
+
+.file-drop-active-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.file-drop-active-indicator.active {
+  opacity: 1;
+}
+
+.file-drop-active-indicator .drop-icon {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 16px;
+}
+
+.file-drop-active-indicator .drop-text {
+  font-size: 24px;
+  color: white;
+  font-weight: 500;
 }
 
 /* Track dropdown menu */
