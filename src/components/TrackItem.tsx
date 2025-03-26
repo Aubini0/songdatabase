@@ -1,5 +1,5 @@
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Music, MoreVertical, Plus, Pencil, Trash2 } from "lucide-react";
 import { Track, Crate } from "@/types/music";
 import {
@@ -50,7 +50,7 @@ const TrackItem = ({
   };
 
   // Close dropdown when clicking outside
-  useState(() => {
+  useEffect(() => {
     if (dropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
