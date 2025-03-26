@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect, useRef } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -18,7 +17,6 @@ const Index = () => {
   const [allTracks, setAllTracks] = useState<Track[]>(sampleTracks);
   const isMobile = useIsMobile();
   
-  // Crates state
   const [crateCounter, setCrateCounter] = useState(1);
   const [crates, setCrates] = useState<Crate[]>([
     { id: "1", name: "Favorites", tracks: [] },
@@ -27,11 +25,9 @@ const Index = () => {
   const [editingCrateId, setEditingCrateId] = useState<string | null>(null);
   const editCrateInputRef = useRef<HTMLInputElement>(null);
   
-  // Audio player state
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPaused, setIsPaused] = useState(true);
   
-  // Focus the input when editing a crate name
   useEffect(() => {
     if (editingCrateId && editCrateInputRef.current) {
       editCrateInputRef.current.focus();
@@ -44,7 +40,6 @@ const Index = () => {
   
   const handleAddToPlaylist = (track: Track) => {
     if (playlistTracks.some(t => t.id === track.id)) {
-      // Remove from playlist if already added
       setPlaylistTracks(prev => prev.filter(t => t.id !== track.id));
       toast({
         description: `${track.title} removed from your broadcast`,
@@ -60,7 +55,6 @@ const Index = () => {
         ),
       });
     } else {
-      // Add to playlist
       setPlaylistTracks(prev => [track, ...prev]);
       toast({
         description: `${track.title} added to your broadcast`,
@@ -97,16 +91,13 @@ const Index = () => {
     setIsPaused(true);
   };
   
-  // Crates handlers
   const handleAddToCrate = (trackId: string, crateId: string) => {
     setCrates(prevCrates => 
       prevCrates.map(crate => {
         if (crate.id === crateId) {
-          // If track is already in crate, don't add it again
           if (crate.tracks.includes(trackId)) {
             return crate;
           }
-          // Add track to crate
           return {
             ...crate,
             tracks: [...crate.tracks, trackId]
@@ -116,7 +107,6 @@ const Index = () => {
       })
     );
     
-    // Find track and crate for toast message
     const track = allTracks.find(t => t.id === trackId);
     const crate = crates.find(c => c.id === crateId);
     
@@ -140,7 +130,6 @@ const Index = () => {
     setCrates(prev => [...prev, newCrate]);
     setCrateCounter(prev => prev + 1);
     
-    // Start editing the new crate name
     setEditingCrateId(newCrateId);
     
     toast({
@@ -161,7 +150,6 @@ const Index = () => {
   };
   
   const handleDeleteTrack = (trackId: string) => {
-    // Remove track from all crates
     setCrates(prevCrates => 
       prevCrates.map(crate => ({
         ...crate,
@@ -169,10 +157,8 @@ const Index = () => {
       }))
     );
     
-    // Remove from playlist if present
     setPlaylistTracks(prev => prev.filter(t => t.id !== trackId));
     
-    // Remove from all tracks
     setAllTracks(prev => prev.filter(t => t.id !== trackId));
     
     toast({
@@ -189,16 +175,15 @@ const Index = () => {
     );
   }, [searchQuery, allTracks]);
 
-  // Add padding to the bottom of the page when audio player or mobile nav is visible
   useEffect(() => {
     const body = document.body;
     
     if (currentTrack && isMobile) {
-      body.style.paddingBottom = "140px"; // Space for both player and mobile nav
+      body.style.paddingBottom = "140px";
     } else if (currentTrack) {
-      body.style.paddingBottom = "80px"; // Just for player on desktop
+      body.style.paddingBottom = "80px";
     } else if (isMobile) {
-      body.style.paddingBottom = "60px"; // Just for mobile nav
+      body.style.paddingBottom = "60px";
     } else {
       body.style.paddingBottom = "0";
     }
@@ -220,7 +205,6 @@ const Index = () => {
           />
           
           <div className="px-3 sm:px-6">
-            {/* Crates section */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-white">Your Crates</h2>
@@ -233,9 +217,9 @@ const Index = () => {
                 </button>
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4">
+              <div className="flex flex-wrap gap-2 sm:gap-4">
                 {crates.map(crate => (
-                  <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item">
+                  <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-1rem)] md:w-[calc(25%-1rem)]">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center flex-1">
                         <FolderClosed size={16} className="text-white/60 mr-2 shrink-0" />

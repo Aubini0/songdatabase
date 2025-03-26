@@ -79,10 +79,22 @@ body {
 /* Crates styling */
 .crate-item {
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .crate-item:hover {
   transform: translateY(-2px);
+}
+
+/* File upload drag and drop */
+.file-drop-zone {
+  transition: all 0.2s ease;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+.file-drop-zone.dragging {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Track dropdown menu */

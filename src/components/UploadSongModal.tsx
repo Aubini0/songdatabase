@@ -1,9 +1,10 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Music, X, Upload, Play, Pause } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Track } from "@/types/music";
 import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 
 interface UploadSongModalProps {
   isOpen: boolean;
@@ -20,30 +21,84 @@ const formatTime = (seconds: number): string => {
 const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalProps) => {
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      setFile(selectedFile);
-      
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files);
+      handleFiles(selectedFiles);
+    }
+  };
+
+  const handleFiles = (selectedFiles: File[]) => {
+    // Filter only audio files
+    const audioFiles = selectedFiles.filter(file => file.type.startsWith('audio/'));
+    
+    if (audioFiles.length === 0) {
+      toast({
+        description: "Please select audio files only",
+        duration: 2000,
+      });
+      return;
+    }
+    
+    setFiles(audioFiles);
+    
+    // Preview the first file
+    if (audioFiles.length > 0) {
       if (audioPreviewUrl) {
         URL.revokeObjectURL(audioPreviewUrl);
       }
-      const previewUrl = URL.createObjectURL(selectedFile);
+      
+      const previewUrl = URL.createObjectURL(audioFiles[0]);
       setAudioPreviewUrl(previewUrl);
+      
+      // Try to get the title and artist from the filename
+      const fileName = audioFiles[0].name.replace(/\.[^/.]+$/, ""); // Remove extension
+      if (!title && fileName) {
+        // Try to split on common separators
+        const parts = fileName.split(/[-–—_]/);
+        if (parts.length >= 2) {
+          setTitle(parts[1].trim());
+          setArtist(parts[0].trim());
+        } else {
+          setTitle(fileName);
+        }
+      }
       
       setIsPlaying(false);
       setCurrentTime(0);
     }
   };
+
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      handleFiles(droppedFiles);
+    }
+  }, []);
 
   const handleAudioMetadata = () => {
     if (audioRef.current) {
@@ -80,7 +135,7 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !artist || !file) {
+    if (!title || !artist || files.length === 0) {
       toast({
         description: "Please fill all required fields",
         duration: 2000,
@@ -101,26 +156,20 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
         durationString = formatTime(duration);
       }
       
-      const newTrack: Track = {
-        id: `upload-${Date.now()}`,
-        title,
-        artist,
-        duration: durationString,
-      };
-      
-      setIsUploading(false);
-      onUploadSuccess(newTrack);
-      
-      setTitle("");
-      setArtist("");
-      setFile(null);
-      setAudioPreviewUrl(null);
-      setIsPlaying(false);
-      setCurrentTime(0);
-      setDuration(0);
+      // Create a new track for each file
+      files.forEach((file, index) => {
+        const newTrack: Track = {
+          id: `upload-${Date.now()}-${index}`,
+          title: index === 0 ? title : `${title} (${index + 1})`,
+          artist,
+          duration: durationString,
+        };
+        
+        onUploadSuccess(newTrack);
+      });
       
       toast({
-        description: `${title} by ${artist} uploaded successfully`,
+        description: `${files.length} ${files.length === 1 ? 'track' : 'tracks'} uploaded successfully`,
         duration: 2000,
         action: (
           <button
@@ -131,6 +180,16 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
           </button>
         ),
       });
+      
+      // Reset form
+      setTitle("");
+      setArtist("");
+      setFiles([]);
+      setAudioPreviewUrl(null);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      setDuration(0);
+      setIsUploading(false);
       
       onClose();
     }, 2000);
@@ -158,7 +217,7 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
           <div className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-white/70 mb-1 text-xs sm:text-sm">Song Title *</label>
-              <input
+              <Input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -169,7 +228,7 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
             
             <div>
               <label className="block text-white/70 mb-1 text-xs sm:text-sm">Artist Name *</label>
-              <input
+              <Input
                 type="text"
                 value={artist}
                 onChange={(e) => setArtist(e.target.value)}
@@ -179,20 +238,44 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
             </div>
             
             <div>
-              <label className="block text-white/70 mb-1 text-xs sm:text-sm">Song File *</label>
+              <label className="block text-white/70 mb-1 text-xs sm:text-sm">Song File(s) *</label>
               <div 
-                className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-black/30 border border-white/10 text-white/70 text-xs sm:text-sm focus:outline-none hover:bg-black/40 cursor-pointer flex items-center gap-2 hover:border-white/30 transition-all"
-                onClick={() => document.getElementById('file-upload')?.click()}
+                className={`w-full px-3 sm:px-4 py-4 sm:py-6 rounded-lg border-2 border-dashed 
+                  ${isDragging ? 'border-white/40 bg-black/40' : 'border-white/10 bg-black/30'} 
+                  text-white/70 text-xs sm:text-sm focus:outline-none hover:bg-black/40 
+                  cursor-pointer flex flex-col items-center gap-2 hover:border-white/30 transition-all`}
+                onClick={() => fileInputRef.current?.click()}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
               >
-                <Music size={16} className="text-white" />
-                <span className="truncate">{file ? file.name : 'Select audio file'}</span>
+                <Upload size={24} className="text-white/60" />
+                <div className="text-center">
+                  <p className="font-medium">Drop your audio files here</p>
+                  <p className="text-white/50 text-xs mt-1">or click to browse</p>
+                </div>
+                {files.length > 0 && (
+                  <div className="mt-2 w-full">
+                    <p className="text-white/80 text-xs font-medium mb-1">{files.length} file(s) selected:</p>
+                    <div className="max-h-24 overflow-y-auto bg-black/20 rounded-md p-2">
+                      {files.map((file, index) => (
+                        <div key={index} className="flex items-center gap-2 text-xs py-1">
+                          <Music size={12} className="text-white/60" />
+                          <span className="truncate">{file.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <input
+                  ref={fileInputRef}
                   id="file-upload"
                   type="file"
                   accept="audio/*"
                   onChange={handleFileChange}
                   className="hidden"
-                  required
+                  multiple
+                  required={files.length === 0}
                 />
               </div>
             </div>
@@ -253,7 +336,7 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
                 Uploading...
               </>
             ) : (
-              <>Upload Song</>
+              <>Upload Song{files.length > 1 ? 's' : ''}</>
             )}
           </button>
         </form>
