@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
 import { Track, Crate } from "@/types/music";
@@ -9,7 +9,7 @@ import UploadSongModal from "@/components/UploadSongModal";
 import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Plus, X, FolderClosed } from "lucide-react";
+import { Plus, X, FolderClosed, Edit2 } from "lucide-react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,16 +19,24 @@ const Index = () => {
   const isMobile = useIsMobile();
   
   // Crates state
+  const [crateCounter, setCrateCounter] = useState(1);
   const [crates, setCrates] = useState<Crate[]>([
     { id: "1", name: "Favorites", tracks: [] },
     { id: "2", name: "Party Mix", tracks: [] }
   ]);
-  const [isCreatingCrate, setIsCreatingCrate] = useState(false);
-  const [newCrateName, setNewCrateName] = useState("");
+  const [editingCrateId, setEditingCrateId] = useState<string | null>(null);
+  const editCrateInputRef = useRef<HTMLInputElement>(null);
   
   // Audio player state
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPaused, setIsPaused] = useState(true);
+  
+  // Focus the input when editing a crate name
+  useEffect(() => {
+    if (editingCrateId && editCrateInputRef.current) {
+      editCrateInputRef.current.focus();
+    }
+  }, [editingCrateId]);
   
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -120,20 +128,55 @@ const Index = () => {
   };
   
   const handleCreateCrate = () => {
-    if (!newCrateName.trim()) return;
+    const newCrateName = `Crate ${crateCounter}`;
+    const newCrateId = `crate-${Date.now()}`;
     
     const newCrate: Crate = {
-      id: `crate-${Date.now()}`,
-      name: newCrateName.trim(),
+      id: newCrateId,
+      name: newCrateName,
       tracks: []
     };
     
     setCrates(prev => [...prev, newCrate]);
-    setNewCrateName("");
-    setIsCreatingCrate(false);
+    setCrateCounter(prev => prev + 1);
+    
+    // Start editing the new crate name
+    setEditingCrateId(newCrateId);
     
     toast({
-      description: `"${newCrateName}" crate created successfully`,
+      description: `New crate created successfully`,
+    });
+  };
+  
+  const handleRenameCrate = (id: string, newName: string) => {
+    if (!newName.trim()) return;
+    
+    setCrates(prev => 
+      prev.map(crate => 
+        crate.id === id ? { ...crate, name: newName.trim() } : crate
+      )
+    );
+    
+    setEditingCrateId(null);
+  };
+  
+  const handleDeleteTrack = (trackId: string) => {
+    // Remove track from all crates
+    setCrates(prevCrates => 
+      prevCrates.map(crate => ({
+        ...crate,
+        tracks: crate.tracks.filter(id => id !== trackId)
+      }))
+    );
+    
+    // Remove from playlist if present
+    setPlaylistTracks(prev => prev.filter(t => t.id !== trackId));
+    
+    // Remove from all tracks
+    setAllTracks(prev => prev.filter(t => t.id !== trackId));
+    
+    toast({
+      description: `Track deleted successfully`,
     });
   };
   
@@ -182,7 +225,7 @@ const Index = () => {
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold text-white">Your Crates</h2>
                 <button 
-                  onClick={() => setIsCreatingCrate(true)}
+                  onClick={handleCreateCrate}
                   className="flex items-center gap-1 px-3 py-1 text-sm bg-white/10 hover:bg-white/15 rounded-md transition-colors"
                 >
                   <Plus size={16} />
@@ -190,40 +233,46 @@ const Index = () => {
                 </button>
               </div>
               
-              {isCreatingCrate ? (
-                <div className="flex items-center gap-2 mb-4">
-                  <input
-                    type="text"
-                    value={newCrateName}
-                    onChange={(e) => setNewCrateName(e.target.value)}
-                    placeholder="Enter crate name"
-                    className="bg-white/5 border border-white/10 rounded px-3 py-1 text-sm flex-1"
-                    autoFocus
-                  />
-                  <button 
-                    onClick={handleCreateCrate}
-                    className="px-3 py-1 text-sm bg-white/10 hover:bg-white/15 rounded-md transition-colors"
-                  >
-                    Create
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setIsCreatingCrate(false);
-                      setNewCrateName("");
-                    }}
-                    className="p-1 text-white/70 hover:text-white"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ) : null}
-              
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4">
                 {crates.map(crate => (
-                  <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer">
-                    <div className="flex items-center mb-2">
-                      <FolderClosed size={16} className="text-white/60 mr-2" />
-                      <span className="text-sm font-medium text-white">{crate.name}</span>
+                  <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center flex-1">
+                        <FolderClosed size={16} className="text-white/60 mr-2 shrink-0" />
+                        
+                        {editingCrateId === crate.id ? (
+                          <input
+                            ref={editCrateInputRef}
+                            type="text"
+                            defaultValue={crate.name}
+                            className="editable-crate-name-input bg-white/10"
+                            onBlur={(e) => handleRenameCrate(crate.id, e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleRenameCrate(crate.id, e.currentTarget.value);
+                              } else if (e.key === 'Escape') {
+                                setEditingCrateId(null);
+                              }
+                            }}
+                          />
+                        ) : (
+                          <span 
+                            className="text-sm font-medium text-white editable-crate-name truncate"
+                            onClick={() => setEditingCrateId(crate.id)}
+                          >
+                            {crate.name}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {!editingCrateId && (
+                        <button 
+                          onClick={() => setEditingCrateId(crate.id)}
+                          className="p-1 text-white/50 hover:text-white/80 transition-colors"
+                        >
+                          <Edit2 size={12} />
+                        </button>
+                      )}
                     </div>
                     <p className="text-xs text-white/50">{crate.tracks.length} tracks</p>
                   </div>
@@ -242,6 +291,7 @@ const Index = () => {
                 onPauseTrack={handlePauseTrack}
                 crates={crates}
                 onAddToCrate={handleAddToCrate}
+                onDeleteTrack={handleDeleteTrack}
               />
             </div>
           </div>

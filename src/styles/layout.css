@@ -89,4 +89,32 @@ body {
 .track-dropdown {
   z-index: 50;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background-color: #1a1a1a;
+}
+
+/* Editable crate name styling */
+.editable-crate-name {
+  cursor: text;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.editable-crate-name:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.editable-crate-name:focus,
+.editable-crate-name-input {
+  background-color: rgba(255, 255, 255, 0.1);
+  outline: none;
+  border-radius: 4px;
+}
+
+.editable-crate-name-input {
+  border: none;
+  width: 100%;
+  color: white;
+  font-size: 14px;
+  padding: 2px 4px;
 }

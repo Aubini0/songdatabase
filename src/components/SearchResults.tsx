@@ -13,6 +13,7 @@ interface SearchResultsProps {
   onPauseTrack: () => void;
   crates?: Crate[];
   onAddToCrate?: (trackId: string, crateId: string) => void;
+  onDeleteTrack?: (trackId: string) => void;
 }
 
 const SearchResults = ({ 
@@ -24,7 +25,8 @@ const SearchResults = ({
   isPaused,
   onPauseTrack,
   crates = [],
-  onAddToCrate
+  onAddToCrate,
+  onDeleteTrack
 }: SearchResultsProps) => {
   if (tracks.length === 0) {
     return (
@@ -58,6 +60,7 @@ const SearchResults = ({
             onPause={onPauseTrack}
             crates={crates}
             onAddToCrate={onAddToCrate}
+            onDeleteTrack={onDeleteTrack}
           />
         ))}
       </div>

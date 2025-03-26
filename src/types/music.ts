@@ -5,6 +5,7 @@ export interface Track {
   artist: string;
   duration?: string;
   audioUrl?: string;
+  imageUrl?: string;
 }
 
 export interface Crate {
