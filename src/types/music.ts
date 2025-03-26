@@ -6,3 +6,9 @@ export interface Track {
   duration?: string;
   audioUrl?: string;
 }
+
+export interface Crate {
+  id: string;
+  name: string;
+  tracks: string[]; // Array of track IDs
+}

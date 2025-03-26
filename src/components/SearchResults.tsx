@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import TrackItem from "./TrackItem";
-import { Track } from "@/types/music";
+import { Track, Crate } from "@/types/music";
 
 interface SearchResultsProps {
   tracks: Track[];
@@ -10,6 +11,8 @@ interface SearchResultsProps {
   currentlyPlaying: Track | null;
   isPaused: boolean;
   onPauseTrack: () => void;
+  crates?: Crate[];
+  onAddToCrate?: (trackId: string, crateId: string) => void;
 }
 
 const SearchResults = ({ 
@@ -19,7 +22,9 @@ const SearchResults = ({
   onPlayTrack,
   currentlyPlaying,
   isPaused,
-  onPauseTrack
+  onPauseTrack,
+  crates = [],
+  onAddToCrate
 }: SearchResultsProps) => {
   if (tracks.length === 0) {
     return (
@@ -51,6 +56,8 @@ const SearchResults = ({
             isPlaying={isTrackPlaying(track)}
             onPlay={onPlayTrack}
             onPause={onPauseTrack}
+            crates={crates}
+            onAddToCrate={onAddToCrate}
           />
         ))}
       </div>
