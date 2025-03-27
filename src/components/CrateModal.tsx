@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, File } from 'lucide-react';
 import { Track, Crate } from '@/types/music';
 import TrackItem from './TrackItem';
 
@@ -76,8 +76,9 @@ const CrateModal: React.FC<CrateModalProps> = ({
         
         <div className="p-4">
           {crateTracksData.length === 0 ? (
-            <div className="py-12 text-center">
-              <p className="text-white/70">No tracks in this crate yet.</p>
+            <div className="py-12 text-center flex flex-col items-center justify-center">
+              <File size={48} className="text-white/30 mb-4" />
+              <p className="text-white/70 text-lg font-medium">No tracks in this crate</p>
               <p className="text-sm text-white/50 mt-2">Add tracks from the library to this crate.</p>
             </div>
           ) : (

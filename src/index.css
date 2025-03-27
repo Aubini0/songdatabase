@@ -13,3 +13,21 @@
 
 /* Import form styles */
 @import './styles/forms.css';
+
+/* Additional custom styles */
+.crates-scroll-container {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.crates-scroll {
+  margin-bottom: 0.75rem;
+}
+
+.scrollbar {
+  margin-top: 0.5rem;
+}
+
+.crate-item {
+  margin-bottom: 0.5rem;
+}
