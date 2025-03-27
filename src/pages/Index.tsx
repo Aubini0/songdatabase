@@ -1,3 +1,4 @@
+
 import { useState, useMemo, useEffect, useRef } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -7,14 +8,10 @@ import { toast } from "@/components/ui/use-toast";
 import UploadSongModal from "@/components/UploadSongModal";
 import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
+import CrateModal from "@/components/CrateModal";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Plus, X, FolderClosed, MoreVertical, Pencil, Trash2 } from "lucide-react";
-import { 
-  Carousel, 
-  CarouselContent, 
-  CarouselItem 
-} from "@/components/ui/carousel";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +36,9 @@ const Index = () => {
   
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPaused, setIsPaused] = useState(true);
+  
+  // State for crate modal
+  const [selectedCrate, setSelectedCrate] = useState<Crate | null>(null);
   
   useEffect(() => {
     if (editingCrateId && editCrateInputRef.current) {
@@ -185,6 +185,14 @@ const Index = () => {
     });
   };
   
+  const handleOpenCrate = (crate: Crate) => {
+    setSelectedCrate(crate);
+  };
+  
+  const handleCloseCrateModal = () => {
+    setSelectedCrate(null);
+  };
+  
   const filteredTracks = useMemo(() => {
     if (!searchQuery.trim()) return allTracks;
     
@@ -237,10 +245,14 @@ const Index = () => {
               </div>
               
               <div className="crates-scroll-container">
-                <ScrollArea className="w-full whitespace-nowrap pb-4" orientation="horizontal">
+                <ScrollArea className="w-full crates-scroll">
                   <div className="flex space-x-4 p-1">
                     {crates.map(crate => (
-                      <div key={crate.id} className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item min-w-[180px] max-w-[220px]">
+                      <div 
+                        key={crate.id} 
+                        className="bg-white/5 hover:bg-white/10 p-3 rounded-lg transition-colors cursor-pointer crate-item min-w-[180px] max-w-[220px]"
+                        onClick={() => !editingCrateId && handleOpenCrate(crate)}
+                      >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center flex-1">
                             <FolderClosed size={16} className="text-white/60 mr-2 shrink-0" />
@@ -252,6 +264,7 @@ const Index = () => {
                                 defaultValue={crate.name}
                                 className="editable-crate-name-input bg-white/10"
                                 onBlur={(e) => handleRenameCrate(crate.id, e.target.value)}
+                                onClick={(e) => e.stopPropagation()}
                                 onKeyDown={(e) => {
                                   if (e.key === 'Enter') {
                                     handleRenameCrate(crate.id, e.currentTarget.value);
@@ -274,6 +287,7 @@ const Index = () => {
                               <DropdownMenuTrigger asChild>
                                 <button 
                                   className="p-1 text-white/50 hover:text-white/80 transition-colors"
+                                  onClick={(e) => e.stopPropagation()}
                                 >
                                   <MoreVertical size={14} />
                                 </button>
@@ -281,14 +295,20 @@ const Index = () => {
                               <DropdownMenuContent align="end" className="bg-[#1a1a1a] border-white/10 text-white">
                                 <DropdownMenuItem 
                                   className="flex items-center cursor-pointer text-white/80 hover:text-white focus:text-white" 
-                                  onClick={() => setEditingCrateId(crate.id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingCrateId(crate.id);
+                                  }}
                                 >
                                   <Pencil size={14} className="mr-2" />
                                   <span>Rename</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem 
                                   className="flex items-center cursor-pointer text-red-400 hover:text-red-300 focus:text-red-300" 
-                                  onClick={() => handleDeleteCrate(crate.id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteCrate(crate.id);
+                                  }}
                                 >
                                   <Trash2 size={14} className="mr-2" />
                                   <span>Delete</span>
@@ -301,6 +321,7 @@ const Index = () => {
                       </div>
                     ))}
                   </div>
+                  <ScrollBar orientation="horizontal" className="scrollbar" />
                 </ScrollArea>
               </div>
             </div>
@@ -326,6 +347,24 @@ const Index = () => {
             onClose={() => setIsUploadModalOpen(false)}
             onUploadSuccess={handleUploadSuccess}
           />
+          
+          {selectedCrate && (
+            <CrateModal
+              crate={selectedCrate}
+              isOpen={!!selectedCrate}
+              onClose={handleCloseCrateModal}
+              tracks={allTracks}
+              onPlayTrack={handlePlayTrack}
+              currentlyPlaying={currentTrack}
+              isPaused={isPaused}
+              onPauseTrack={handlePauseTrack}
+              onAddToPlaylist={handleAddToPlaylist}
+              playlistTracks={playlistTracks}
+              crates={crates}
+              onAddToCrate={handleAddToCrate}
+              onDeleteTrack={handleDeleteTrack}
+            />
+          )}
           
           {currentTrack && (
             <AudioPlayer 

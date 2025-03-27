@@ -94,20 +94,24 @@ body {
   overflow: hidden;
 }
 
-.crates-scroll-container .scrollbar {
-  height: 4px;
-  opacity: 0.6;
-}
-
 /* Improved horizontal scrolling for crates */
-[data-orientation="horizontal"] .scrollbar {
-  height: 6px !important;
-  border-radius: 3px;
-  background-color: rgba(255, 255, 255, 0.05);
+.crates-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.05);
 }
 
-[data-orientation="horizontal"] .thumb {
+.crates-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.crates-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.crates-scroll::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
 /* File upload drag and drop */
@@ -186,4 +190,45 @@ body {
   color: white;
   font-size: 14px;
   padding: 2px 4px;
+}
+
+/* Custom modal for crate content */
+.crate-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.crate-modal-content {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.crate-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
