@@ -19,6 +19,7 @@ interface TrackItemProps {
   crates?: Crate[];
   onAddToCrate?: (trackId: string, crateId: string) => void;
   onDeleteTrack?: (trackId: string) => void;
+  inCrateView?: boolean; // New prop to hide the three dots menu in crate view
 }
 
 const TrackItem = ({ 
@@ -30,7 +31,8 @@ const TrackItem = ({
   onPause,
   crates = [],
   onAddToCrate,
-  onDeleteTrack
+  onDeleteTrack,
+  inCrateView = false // Default to false
 }: TrackItemProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [addToCrateDialogOpen, setAddToCrateDialogOpen] = useState(false);
@@ -107,55 +109,57 @@ const TrackItem = ({
           <p className="text-xs sm:text-sm text-white/50">{track.duration}</p>
         )}
         
-        {/* Three dots dropdown menu */}
-        <div className="relative" ref={dropdownRef}>
-          <button 
-            onClick={toggleDropdown}
-            className="p-1 rounded-full hover:bg-white/10 transition-all text-white/70"
-            aria-label="More options"
-          >
-            <MoreVertical size={16} />
-          </button>
-          
-          {dropdownOpen && (
-            <div className="absolute right-0 top-full mt-1 w-48 rounded-md bg-[#1a1a1a] border border-white/10 shadow-lg z-50 track-dropdown">
-              <div className="py-1">
-                <button
-                  className="flex items-center w-full px-4 py-2 text-sm text-white/80 hover:bg-white/10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setAddToCrateDialogOpen(true);
-                    setDropdownOpen(false);
-                  }}
-                >
-                  <Plus size={14} className="mr-2" />
-                  Add to Crate
-                </button>
-                
-                <button
-                  className="flex items-center w-full px-4 py-2 text-sm text-white/80 hover:bg-white/10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // Rename functionality to be implemented
-                  }}
-                >
-                  <Pencil size={14} className="mr-2" />
-                  Rename
-                </button>
-                
-                {onDeleteTrack && (
+        {/* Only show the three dots dropdown menu if not in crate view */}
+        {!inCrateView && (
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={toggleDropdown}
+              className="p-1 rounded-full hover:bg-white/10 transition-all text-white/70"
+              aria-label="More options"
+            >
+              <MoreVertical size={16} />
+            </button>
+            
+            {dropdownOpen && (
+              <div className="absolute right-0 top-full mt-1 w-48 rounded-md bg-[#1a1a1a] border border-white/10 shadow-lg z-50 track-dropdown">
+                <div className="py-1">
                   <button
-                    className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-white/10"
-                    onClick={handleDeleteTrack}
+                    className="flex items-center w-full px-4 py-2 text-sm text-white/80 hover:bg-white/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAddToCrateDialogOpen(true);
+                      setDropdownOpen(false);
+                    }}
                   >
-                    <Trash2 size={14} className="mr-2" />
-                    Delete
+                    <Plus size={14} className="mr-2" />
+                    Add to Crate
                   </button>
-                )}
+                  
+                  <button
+                    className="flex items-center w-full px-4 py-2 text-sm text-white/80 hover:bg-white/10"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Rename functionality to be implemented
+                    }}
+                  >
+                    <Pencil size={14} className="mr-2" />
+                    Rename
+                  </button>
+                  
+                  {onDeleteTrack && (
+                    <button
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-white/10"
+                      onClick={handleDeleteTrack}
+                    >
+                      <Trash2 size={14} className="mr-2" />
+                      Delete
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Add to Crate Dialog */}

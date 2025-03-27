@@ -95,6 +95,7 @@ const CrateModal: React.FC<CrateModalProps> = ({
                       crates={crates}
                       onAddToCrate={onAddToCrate}
                       onDeleteTrack={onDeleteTrack}
+                      inCrateView={true} // Set to true for crate view
                     />
                   </div>
                   <button 
