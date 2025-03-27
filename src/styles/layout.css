@@ -114,6 +114,12 @@ body {
   border-radius: 3px;
 }
 
+/* Add more space for the scrollbar */
+.crates-scroll .scrollbar {
+  margin-top: 12px; /* Add space between crates and scrollbar */
+  opacity: 0.8; /* Make scrollbar more visible */
+}
+
 /* File upload drag and drop */
 .file-drop-zone {
   transition: all 0.2s ease;
@@ -192,7 +198,7 @@ body {
   padding: 2px 4px;
 }
 
-/* Custom modal for crate content */
+/* Custom modal for crate content - Improved look */
 .crate-modal-overlay {
   position: fixed;
   inset: 0;
@@ -206,13 +212,14 @@ body {
 
 .crate-modal-content {
   background-color: #1a1a1a;
-  border-radius: 8px;
+  border-radius: 12px;
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   animation: scaleIn 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 @keyframes fadeIn {
@@ -230,5 +237,17 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Add styles for the delete song button in crate modal */
+.crate-track-delete-btn {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+}
+
+.crate-track-delete-btn:hover {
+  color: rgba(255, 100, 100, 0.9);
+  transform: scale(1.1);
 }

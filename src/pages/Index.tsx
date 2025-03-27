@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect, useRef } from "react";
 import SearchBar from "@/components/SearchBar";
 import SearchResults from "@/components/SearchResults";
@@ -37,7 +36,6 @@ const Index = () => {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   const [isPaused, setIsPaused] = useState(true);
   
-  // State for crate modal
   const [selectedCrate, setSelectedCrate] = useState<Crate | null>(null);
   
   useEffect(() => {
@@ -191,6 +189,29 @@ const Index = () => {
   
   const handleCloseCrateModal = () => {
     setSelectedCrate(null);
+  };
+  
+  const handleRemoveFromCrate = (crateId: string, trackId: string) => {
+    setCrates(prevCrates => 
+      prevCrates.map(crate => {
+        if (crate.id === crateId) {
+          return {
+            ...crate,
+            tracks: crate.tracks.filter(id => id !== trackId)
+          };
+        }
+        return crate;
+      })
+    );
+    
+    const track = allTracks.find(t => t.id === trackId);
+    const crate = crates.find(c => c.id === crateId);
+    
+    if (track && crate) {
+      toast({
+        description: `${track.title} removed from "${crate.name}" crate`,
+      });
+    }
   };
   
   const filteredTracks = useMemo(() => {
@@ -363,6 +384,7 @@ const Index = () => {
               crates={crates}
               onAddToCrate={handleAddToCrate}
               onDeleteTrack={handleDeleteTrack}
+              onRemoveFromCrate={handleRemoveFromCrate}
             />
           )}
           
