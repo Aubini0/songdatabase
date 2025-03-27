@@ -116,8 +116,13 @@ body {
 
 /* Add more space for the scrollbar */
 .crates-scroll .scrollbar {
-  margin-top: 12px; /* Add space between crates and scrollbar */
+  margin-top: 18px; /* Increased from 12px to 18px for more space */
   opacity: 0.8; /* Make scrollbar more visible */
+}
+
+/* Add padding to the crates container to provide space between crates and scrollbar */
+.crates-scroll > div {
+  padding-bottom: 12px;
 }
 
 /* File upload drag and drop */

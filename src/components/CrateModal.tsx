@@ -99,8 +99,9 @@ const CrateModal: React.FC<CrateModalProps> = ({
                   </div>
                   <button 
                     onClick={() => handleRemoveFromCrate(track.id)}
-                    className="p-2 crate-track-delete-btn mr-2" 
+                    className="p-2 text-white/50 hover:text-red-400 transition-colors mr-2" 
                     aria-label="Remove from crate"
+                    title="Remove from crate"
                   >
                     <Trash2 size={16} />
                   </button>
