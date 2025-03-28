@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { SearchBar } from "@/components/SearchBar";
-import { SearchResults } from "@/components/SearchResults";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import SearchBar from "@/components/SearchBar";
+import SearchResults from "@/components/SearchResults";
 import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
-import { UploadSongModal } from "@/components/upload/UploadSongModal";
+import UploadSongModal from "@/components/upload/UploadSongModal";
 import { Plus, X, FolderClosed, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
@@ -12,6 +12,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Track, Crate } from "@/types/music";
+import sampleTracks from "@/data/sampleTracks";
+import { toast } from "@/components/ui/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
+import CrateModal from "@/components/CrateModal";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
