@@ -75,42 +75,44 @@ const CrateModal: React.FC<CrateModalProps> = ({
         </div>
         
         <div className="p-4">
-          {crateTracksData.length === 0 ? (
-            <div className="py-12 text-center flex flex-col items-center justify-center">
-              <File size={48} className="text-white/30 mb-4" />
-              <p className="text-white/70 text-lg font-medium">No tracks in this crate</p>
-              <p className="text-sm text-white/50 mt-2">Add tracks from the library to this crate.</p>
-            </div>
-          ) : (
-            <div className="max-h-[60vh] overflow-y-auto pr-1">
-              {crateTracksData.map(track => (
-                <div key={track.id} className="flex items-center animate-enter mb-2 rounded-lg hover:bg-white/5 transition-colors">
-                  <div className="flex-1">
-                    <TrackItem 
-                      track={track} 
-                      onAdd={onAddToPlaylist}
-                      isInPlaylist={isInPlaylist(track)}
-                      isPlaying={isTrackPlaying(track)}
-                      onPlay={onPlayTrack}
-                      onPause={onPauseTrack}
-                      crates={crates}
-                      onAddToCrate={onAddToCrate}
-                      onDeleteTrack={onDeleteTrack}
-                      inCrateView={true} // Set to true for crate view
-                    />
+          <div className="max-h-[60vh] min-h-[300px] overflow-y-auto pr-1">
+            {crateTracksData.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center py-12">
+                <File size={48} className="text-white/30 mb-4" />
+                <p className="text-white/70 text-lg font-medium">No tracks in this crate</p>
+                <p className="text-sm text-white/50 mt-2">Add tracks from the library to this crate.</p>
+              </div>
+            ) : (
+              <div>
+                {crateTracksData.map(track => (
+                  <div key={track.id} className="flex items-center animate-enter mb-2 rounded-lg hover:bg-white/5 transition-colors">
+                    <div className="flex-1">
+                      <TrackItem 
+                        track={track} 
+                        onAdd={onAddToPlaylist}
+                        isInPlaylist={isInPlaylist(track)}
+                        isPlaying={isTrackPlaying(track)}
+                        onPlay={onPlayTrack}
+                        onPause={onPauseTrack}
+                        crates={crates}
+                        onAddToCrate={onAddToCrate}
+                        onDeleteTrack={onDeleteTrack}
+                        inCrateView={true} // Set to true for crate view
+                      />
+                    </div>
+                    <button 
+                      onClick={() => handleRemoveFromCrate(track.id)}
+                      className="p-2 text-white/50 hover:text-red-400 transition-colors mr-2" 
+                      aria-label="Remove from crate"
+                      title="Remove from crate"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => handleRemoveFromCrate(track.id)}
-                    className="p-2 text-white/50 hover:text-red-400 transition-colors mr-2" 
-                    aria-label="Remove from crate"
-                    title="Remove from crate"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
