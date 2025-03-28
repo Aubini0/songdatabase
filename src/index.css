@@ -16,12 +16,12 @@
 
 /* Additional custom styles */
 .crates-scroll-container {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
 }
 
 .crates-scroll {
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .scrollbar {
@@ -30,4 +30,77 @@
 
 .crate-item {
   margin-bottom: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.crate-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Improved track item styling */
+.track-item {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.track-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Improved slider thumb */
+.slider-thumb {
+  @apply h-3 w-3 bg-white rounded-full border-none shadow-sm;
+}
+
+/* Crate modal styling */
+.crate-modal-overlay {
+  @apply fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in;
+}
+
+.crate-modal-content {
+  @apply neo-blur rounded-xl w-full max-w-md animate-scale-in border border-white/20 shadow-xl overflow-hidden;
+}
+
+.crate-modal-header {
+  @apply flex items-center justify-between p-4 border-b border-white/10 bg-gradient-to-r from-[#1a1a1a] to-[#252525];
+}
+
+/* Enhanced audio player styling */
+.audio-player {
+  box-shadow: 0 -10px 20px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Upload button pulsing animation */
+@keyframes subtle-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(147, 51, 234, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0);
+  }
+}
+
+.upload-pulse {
+  animation: subtle-pulse 2s infinite;
+}
+
+/* Improved focus styles */
+*:focus-visible {
+  outline: 2px solid rgba(147, 51, 234, 0.5);
+  outline-offset: 2px;
+}
+
+/* Editable input styling */
+.editable-crate-name-input {
+  @apply p-1 rounded bg-black/50 border border-purple-500/40 text-white w-full focus:outline-none focus:ring-2 focus:ring-purple-500/30;
 }

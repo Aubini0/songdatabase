@@ -1,9 +1,10 @@
 
-import { Search, Upload } from "lucide-react";
+import { Search, Upload, Music } from "lucide-react";
 import { useState } from "react";
 import { toast } from "../components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -33,28 +34,28 @@ const SearchBar = ({ onSearch, onOpenUploadModal }: SearchBarProps) => {
     )}>
       <form onSubmit={handleSearch} className="w-full flex-1">
         <div className="relative flex-grow group">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 group-hover:text-white/70 transition-colors" size={18} />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 group-focus-within:text-white transition-colors" size={18} />
           <input
             type="text"
             placeholder="Search songs, artists, albums..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-lg bg-black/40 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all"
+            className="w-full pl-10 pr-4 py-3 rounded-lg bg-black/60 border border-white/10 text-white shadow-inner shadow-black/30
+              focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500/50 transition-all"
           />
         </div>
       </form>
       
-      <button
-        type="button"
+      <Button
         onClick={onOpenUploadModal}
         className={cn(
-          "rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white transition-colors flex items-center justify-center gap-2 shadow-md",
-          isMobile ? "px-3 py-2 min-w-[100px]" : "px-4 py-3 min-w-[120px]"
+          "rounded-lg bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-medium shadow-md transition-all duration-300 flex items-center gap-2",
+          isMobile ? "py-2 px-3" : "py-2.5 px-4"
         )}
       >
         <Upload size={isMobile ? 16 : 18} className="text-white/90" />
-        <span className={cn("font-medium", isMobile ? "text-sm" : "")}>Upload</span>
-      </button>
+        <span>Upload</span>
+      </Button>
     </div>
   );
 };

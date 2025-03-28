@@ -34,7 +34,7 @@ const AudioPlayer = ({ currentTrack, onClose }: AudioPlayerProps) => {
   if (!currentTrack) return null;
   
   return (
-    <div className="audio-player fixed bottom-0 left-0 right-0 w-full bg-[#121212] border-t border-white/10 text-white shadow-lg z-50"
+    <div className="audio-player fixed bottom-0 left-0 right-0 w-full bg-gradient-to-r from-[#121212] via-[#1a1a1a] to-[#121212] border-t border-white/10 text-white shadow-lg z-50 backdrop-blur-md"
       style={{ 
         bottom: isMobile ? "60px" : "0",
         height: isMobile ? "auto" : "80px"

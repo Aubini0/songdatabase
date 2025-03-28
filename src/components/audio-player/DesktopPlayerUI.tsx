@@ -35,13 +35,21 @@ export const DesktopPlayerUI = ({
     <div className="flex items-center justify-between w-full h-full px-4">
       {/* Track info - left side */}
       <div className="flex items-center gap-3 min-w-[180px] max-w-[30%]">
-        <div className="h-12 w-12 bg-neutral-800 flex-shrink-0">
-          {currentTrack.imageUrl && (
+        <div className="h-12 w-12 bg-neutral-800 rounded-md overflow-hidden flex-shrink-0 shadow-md border border-white/5">
+          {currentTrack.imageUrl ? (
             <img 
               src={currentTrack.imageUrl} 
               alt={currentTrack.title} 
               className="h-full w-full object-cover"
             />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-purple-600/30 to-purple-800/30">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
+                <path d="M9 18V5l12-2v13"></path>
+                <circle cx="6" cy="18" r="3"></circle>
+                <circle cx="18" cy="16" r="3"></circle>
+              </svg>
+            </div>
           )}
         </div>
         
@@ -55,10 +63,10 @@ export const DesktopPlayerUI = ({
       <div className="flex flex-col items-center max-w-[40%] w-full gap-1">
         <div className="flex items-center gap-4">
           <button 
-            className="text-white/70 hover:text-white p-1 transition-colors"
+            className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-full transition-colors"
             aria-label="Previous track"
           >
-            <SkipBack size={18} />
+            <SkipBack size={16} />
           </button>
           
           <button 
@@ -66,14 +74,14 @@ export const DesktopPlayerUI = ({
             className="p-2 rounded-full bg-white text-black hover:bg-white/90 transition-colors"
             aria-label={isPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+            {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
           </button>
           
           <button 
-            className="text-white/70 hover:text-white p-1 transition-colors"
+            className="text-white/70 hover:text-white p-1.5 hover:bg-white/10 rounded-full transition-colors"
             aria-label="Next track"
           >
-            <SkipForward size={18} />
+            <SkipForward size={16} />
           </button>
         </div>
         
@@ -81,14 +89,17 @@ export const DesktopPlayerUI = ({
           <span className="text-xs text-white/70 w-8 text-right flex-shrink-0">
             {formatTime(currentTime)}
           </span>
-          <Slider
-            value={[currentTime]}
-            min={0}
-            max={duration || 100}
-            step={1}
-            onValueChange={handleSeek}
-            className="w-full"
-          />
+          <div className="relative w-full group h-7 flex items-center">
+            <Slider
+              value={[currentTime]}
+              min={0}
+              max={duration || 100}
+              step={1}
+              onValueChange={handleSeek}
+              className="w-full cursor-pointer"
+            />
+            <div className="absolute inset-0 -z-10 scale-y-0 opacity-0 group-hover:opacity-100 group-hover:scale-y-100 bg-white/5 rounded-full transition-all duration-150"></div>
+          </div>
           <span className="text-xs text-white/70 w-8 flex-shrink-0">
             {formatTime(duration)}
           </span>
@@ -100,20 +111,23 @@ export const DesktopPlayerUI = ({
         <div className="flex items-center gap-2">
           <button
             onClick={toggleMute}
-            className="p-1 rounded-full hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
             aria-label={isMuted ? "Unmute" : "Mute"}
           >
-            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
           </button>
           
-          <Slider
-            value={[isMuted ? 0 : volume]}
-            min={0}
-            max={1}
-            step={0.01}
-            onValueChange={handleVolumeChange}
-            className="w-20"
-          />
+          <div className="relative w-24 group h-7 flex items-center">
+            <Slider
+              value={[isMuted ? 0 : volume]}
+              min={0}
+              max={1}
+              step={0.01}
+              onValueChange={handleVolumeChange}
+              className="w-full cursor-pointer"
+            />
+            <div className="absolute inset-0 -z-10 scale-y-0 opacity-0 group-hover:opacity-100 group-hover:scale-y-100 bg-white/5 rounded-full transition-all duration-150"></div>
+          </div>
         </div>
         
         {onClose && (
@@ -122,7 +136,7 @@ export const DesktopPlayerUI = ({
             className="p-1.5 rounded-full hover:bg-white/10 transition-colors ml-2"
             aria-label="Close player"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         )}
       </div>

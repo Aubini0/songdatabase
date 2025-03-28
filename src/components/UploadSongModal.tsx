@@ -1,10 +1,11 @@
 
 import React, { useState, useRef, useCallback } from "react";
-import { Music, X, Upload, Play, Pause } from "lucide-react";
+import { Music, X, Upload, Play, Pause, FileMusic } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { Track } from "@/types/music";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface UploadSongModalProps {
   isOpen: boolean;
@@ -198,75 +199,92 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-      <div className="neo-blur rounded-xl w-full max-w-sm sm:max-w-md p-4 sm:p-6 relative animate-scale-in">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="neo-blur rounded-xl w-full max-w-sm sm:max-w-md p-4 sm:p-6 relative animate-scale-in border border-white/20 shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 p-1 rounded-full hover:bg-white/10 transition-colors"
+          className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-white/15 transition-colors"
           aria-label="Close"
         >
-          <X size={18} className="text-white/70" />
+          <X size={18} className="text-white/80" />
         </button>
         
-        <h2 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-white flex items-center gap-2">
-          <Upload size={18} className="text-white" />
-          Upload Song
+        <h2 className="text-xl sm:text-2xl font-bold mb-5 sm:mb-6 text-white flex items-center gap-2">
+          <Upload size={20} className="text-purple-400" />
+          <span className="bg-gradient-to-r from-white to-white/80 text-transparent bg-clip-text">Upload Song</span>
         </h2>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-3 sm:space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <label className="block text-white/70 mb-1 text-xs sm:text-sm">Song Title *</label>
+              <label className="block text-white/80 mb-1.5 text-sm font-medium">Song Title <span className="text-purple-400">*</span></label>
               <Input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 rounded-lg bg-black/30 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                className="w-full px-3 sm:px-4 py-2.5 rounded-lg bg-black/60 border border-white/15 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500/50 transition-all shadow-inner shadow-black/30"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-white/70 mb-1 text-xs sm:text-sm">Artist Name *</label>
+              <label className="block text-white/80 mb-1.5 text-sm font-medium">Artist Name <span className="text-purple-400">*</span></label>
               <Input
                 type="text"
                 value={artist}
                 onChange={(e) => setArtist(e.target.value)}
-                className="w-full px-3 sm:px-4 py-2 rounded-lg bg-black/30 border border-white/10 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20 transition-all"
+                className="w-full px-3 sm:px-4 py-2.5 rounded-lg bg-black/60 border border-white/15 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500/50 transition-all shadow-inner shadow-black/30"
                 required
               />
             </div>
             
             <div>
-              <label className="block text-white/70 mb-1 text-xs sm:text-sm">Song File(s) *</label>
+              <label className="block text-white/80 mb-1.5 text-sm font-medium">Song File(s) <span className="text-purple-400">*</span></label>
               <div 
-                className={`w-full px-3 sm:px-4 py-4 sm:py-6 rounded-lg border-2 border-dashed 
-                  ${isDragging ? 'border-white/40 bg-black/40' : 'border-white/10 bg-black/30'} 
-                  text-white/70 text-xs sm:text-sm focus:outline-none hover:bg-black/40 
-                  cursor-pointer flex flex-col items-center gap-2 hover:border-white/30 transition-all`}
+                className={`w-full px-4 py-8 rounded-lg border-2 border-dashed cursor-pointer transition-all
+                  ${isDragging 
+                    ? 'border-purple-400 bg-purple-500/10' 
+                    : 'border-white/20 bg-black/60 hover:bg-black/70 hover:border-purple-400/50'
+                  }`}
                 onClick={() => fileInputRef.current?.click()}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                  
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const droppedFiles = Array.from(e.dataTransfer.files);
+                    handleFiles(droppedFiles);
+                  }
+                }}
               >
-                <Upload size={24} className="text-white/60" />
-                <div className="text-center">
-                  <p className="font-medium">Drop your audio files here</p>
-                  <p className="text-white/50 text-xs mt-1">or click to browse</p>
+                <div className="flex flex-col items-center gap-2 text-center">
+                  {files.length === 0 ? (
+                    <>
+                      <div className="w-14 h-14 rounded-full bg-purple-500/20 flex items-center justify-center mb-2">
+                        <FileMusic size={24} className="text-purple-400" />
+                      </div>
+                      <p className="font-medium text-white">Drop your audio files here</p>
+                      <p className="text-white/60 text-sm">or click to browse your files</p>
+                    </>
+                  ) : (
+                    <>
+                      <Music size={24} className="text-purple-400 mb-1" />
+                      <p className="font-medium text-white">{files.length} file{files.length !== 1 ? 's' : ''} selected</p>
+                      <div className="mt-2 max-w-full overflow-hidden text-ellipsis">
+                        <p className="text-sm text-white/60 truncate">{files[0].name}{files.length > 1 ? ` and ${files.length - 1} more` : ''}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
-                {files.length > 0 && (
-                  <div className="mt-2 w-full">
-                    <p className="text-white/80 text-xs font-medium mb-1">{files.length} file(s) selected:</p>
-                    <div className="max-h-24 overflow-y-auto bg-black/20 rounded-md p-2">
-                      {files.map((file, index) => (
-                        <div key={index} className="flex items-center gap-2 text-xs py-1">
-                          <Music size={12} className="text-white/60" />
-                          <span className="truncate">{file.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                
                 <input
                   ref={fileInputRef}
                   id="file-upload"
@@ -281,7 +299,7 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
             </div>
             
             {audioPreviewUrl && (
-              <div className="mt-4 rounded-lg bg-black/30 p-3 border border-white/10">
+              <div className="mt-4 rounded-lg bg-black/50 p-4 border border-white/15">
                 <audio 
                   ref={audioRef} 
                   src={audioPreviewUrl}
@@ -296,14 +314,14 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
                     <button
                       type="button"
                       onClick={handlePlayPause}
-                      className="p-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                      className="p-2 rounded-full bg-purple-600 hover:bg-purple-500 transition-colors flex-shrink-0"
                     >
                       {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                     </button>
-                    <span className="text-xs text-white/80">Preview</span>
+                    <span className="text-sm text-white/80 font-medium">Preview</span>
                   </div>
                   
-                  <div className="flex items-center gap-2 pt-1">
+                  <div className="flex items-center gap-2 pt-2">
                     <span className="text-xs text-white/70 w-8">{formatTime(currentTime)}</span>
                     <Slider
                       value={[currentTime]}
@@ -320,25 +338,28 @@ const UploadSongModal = ({ isOpen, onClose, onUploadSuccess }: UploadSongModalPr
             )}
           </div>
           
-          <button
+          <Button
             type="submit"
             disabled={isUploading}
-            className={`w-full py-2 sm:py-3 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-sm transition-colors mt-4 sm:mt-6 flex items-center justify-center ${
+            className={`w-full py-2.5 sm:py-3 rounded-lg bg-gradient-to-br from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-medium text-sm shadow-md transition-all duration-300 mt-4 sm:mt-6 ${
               isUploading ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >
             {isUploading ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <div className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Uploading...
-              </>
+                <span>Uploading...</span>
+              </div>
             ) : (
-              <>Upload Song{files.length > 1 ? 's' : ''}</>
+              <div className="flex items-center justify-center gap-2">
+                <Upload size={18} />
+                <span>Upload Song{files.length > 1 ? 's' : ''}</span>
+              </div>
             )}
-          </button>
+          </Button>
         </form>
       </div>
     </div>
