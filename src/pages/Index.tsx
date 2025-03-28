@@ -1,6 +1,6 @@
-
 import React, { useEffect } from "react";
-import SearchResultsSection from "@/components/SearchResultsSection";
+import SearchBar from "@/components/SearchBar";
+import SearchResults from "@/components/SearchResults";
 import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
 import UploadSongModal from "@/components/upload/UploadSongModal";
@@ -85,19 +85,9 @@ const Index = () => {
       
       <div className="flex-1 sm:ml-[70px] sidebar-expanded:ml-[220px] transition-all duration-300">
         <div className="max-w-5xl mx-auto pb-6 sm:pb-20">
-          <SearchResultsSection 
-            filteredTracks={playlistHook.filteredTracks}
-            playlistTracks={playlistHook.playlistTracks}
-            currentTrack={playlistHook.currentTrack}
-            isPaused={playlistHook.isPaused}
-            crates={cratesHook.crates}
-            onSearch={playlistHook.handleSearch}
+          <SearchBar 
+            onSearch={playlistHook.handleSearch} 
             onOpenUploadModal={() => setIsUploadModalOpen(true)}
-            onAddToPlaylist={playlistHook.handleAddToPlaylist}
-            onPlayTrack={playlistHook.handlePlayTrack}
-            onPauseTrack={playlistHook.handlePauseTrack}
-            onAddToCrate={handleAddToCrate}
-            onDeleteTrack={playlistHook.handleDeleteTrack}
           />
           
           <div className="px-3 sm:px-6">
@@ -111,6 +101,21 @@ const Index = () => {
               onOpenCrate={cratesHook.handleOpenCrate}
               setEditingCrateId={cratesHook.setEditingCrateId}
             />
+            
+            <div className="glass-morphism rounded-lg overflow-hidden">
+              <SearchResults 
+                tracks={playlistHook.filteredTracks} 
+                onAddToPlaylist={playlistHook.handleAddToPlaylist}
+                playlistTracks={playlistHook.playlistTracks}
+                onPlayTrack={playlistHook.handlePlayTrack}
+                currentlyPlaying={playlistHook.currentTrack}
+                isPaused={playlistHook.isPaused}
+                onPauseTrack={playlistHook.handlePauseTrack}
+                crates={cratesHook.crates}
+                onAddToCrate={handleAddToCrate}
+                onDeleteTrack={playlistHook.handleDeleteTrack}
+              />
+            </div>
           </div>
           
           <UploadSongModal 
