@@ -61,17 +61,27 @@ export const useAudioPreview = (audioFile: File | null) => {
       setCurrentTime(newTime);
     }
   };
+  
+  const handleEnded = () => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+    }
+  };
 
   return {
     audioRef,
     audioPreviewUrl,
     isPlaying,
+    setIsPlaying,
     currentTime,
     duration,
     handleAudioMetadata,
     handleAudioTimeUpdate,
     handlePlayPause,
     handleSeek,
+    handleEnded,
     formattedCurrentTime: formatTime(currentTime),
     formattedDuration: formatTime(duration)
   };

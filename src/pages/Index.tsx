@@ -1,14 +1,9 @@
-import { useState, useMemo, useEffect, useRef } from "react";
-import SearchBar from "@/components/SearchBar";
-import SearchResults from "@/components/SearchResults";
-import { Track, Crate } from "@/types/music";
-import sampleTracks from "@/data/sampleTracks";
-import { toast } from "@/components/ui/use-toast";
-import UploadSongModal from "@/components/UploadSongModal";
+import React, { useState } from "react";
+import { SearchBar } from "@/components/SearchBar";
+import { SearchResults } from "@/components/SearchResults";
 import AudioPlayer from "@/components/audio-player";
 import Sidebar from "@/components/Sidebar";
-import CrateModal from "@/components/CrateModal";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { UploadSongModal } from "@/components/upload/UploadSongModal";
 import { Plus, X, FolderClosed, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {

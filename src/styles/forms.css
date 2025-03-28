@@ -26,15 +26,21 @@
 
 /* Improved player seeker */
 .audio-seeker {
-  @apply w-full h-1.5 bg-white/10 rounded-full overflow-hidden relative group;
+  @apply w-full h-1.5 bg-white/10 rounded-full overflow-hidden relative;
 }
 
+/* Fix: Removed 'group' from @apply and will apply it directly in HTML */
 .audio-seeker-progress {
   @apply absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full;
 }
 
 .audio-seeker-handle {
-  @apply absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity;
+  @apply absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white shadow-md opacity-0 transition-opacity;
+}
+
+/* We'll use this class with group-hover in HTML instead */
+.audio-seeker:hover .audio-seeker-handle {
+  opacity: 1;
 }
 
 /* Enhanced input field styles */
